@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">FTP File Manager</string>
+
+
+    <string name="file_icon">File icon</string>
+
+    <string name="connect_as">Connect as:</string>
+    <string name="remember_pass_01">Forgot password immediately</string>
+    <string name="remember_pass_02">Remember until logout</string>
+    <string name="remember_pass_03">Remember forever</string>
+    <string name="connect_as_anonymous">Anonymous</string>
+    <string name="connect_as_registered">Registered user</string>
+
+    <!-- Helper text-->
+    <string name="helper_host">Enter server address</string>
+    <string name="hint_host">Host</string>
+    <string name="helper_port">Default is 21</string>
+    <string name="hint_port">Port</string>
+    <string name="helper_username">Enter username</string>
+    <string name="hint_username">Username</string>
+    <string name="helper_password">Enter password</string>
+    <string name="hint_password">Password</string>
+</resources>

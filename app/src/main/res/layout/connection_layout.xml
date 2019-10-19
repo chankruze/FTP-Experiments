@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <Button
+            android:id="@+id/btn_connect"
+            style="@style/ButtonOutlined"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="Connect" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="32sp"
+                android:layout_height="32sp"
+                android:layout_gravity="center"
+                android:paddingEnd="8dp"
+                android:src="@drawable/ic_hard_drive" />
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Server Details" />
+        </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/host_layout"
+            style="@style/InputLayoutStyle"
+            android:hint="@string/hint_host"
+            app:helperText="@string/helper_host">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/id_host"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/port_layout"
+            style="@style/InputLayoutStyle"
+            android:hint="@string/hint_port"
+            app:helperText="@string/helper_port">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/id_port"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp">
+
+            <ImageView
+                android:layout_width="32sp"
+                android:layout_height="32sp"
+                android:layout_gravity="center"
+                android:paddingEnd="8dp"
+                android:src="@drawable/ic_people" />
+
+            <TextView
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="User Details" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:textColor="@color/textColor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/connect_as"
+                android:paddingEnd="8dp"/>
+
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkedButton="@+id/first"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/connection_01"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/connect_as_anonymous" />
+
+                <RadioButton
+                    android:id="@+id/connection_02"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/connect_as_registered" />
+            </RadioGroup>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/username_layout"
+                style="@style/InputLayoutStyle"
+                android:hint="@string/hint_username"
+                app:helperText="@string/helper_username">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/id_username"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/password_layout"
+                style="@style/InputLayoutStyle"
+                android:hint="@string/hint_password"
+                app:helperText="@string/helper_password">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/id_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkedButton="@+id/first"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/save_pass_01"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/remember_pass_01" />
+
+                <RadioButton
+                    android:id="@+id/save_pass_02"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/remember_pass_02" />
+
+                <RadioButton
+                    android:id="@+id/save_pass_03"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/remember_pass_03" />
+            </RadioGroup>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
