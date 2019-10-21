@@ -10,14 +10,6 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <Button
-            android:id="@+id/btn_connect"
-            style="@style/ButtonOutlined"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:text="Connect" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -45,8 +37,8 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/id_host"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                style="@style/InputEditText"
+                android:digits="._0123456789qwertzuiopasdfghjklyxcvbnm"/>
         </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -54,12 +46,13 @@
             android:id="@+id/port_layout"
             style="@style/InputLayoutStyle"
             android:hint="@string/hint_port"
+            app:counterMaxLength="5"
             app:helperText="@string/helper_port">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/id_port"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                style="@style/InputEditText"
+                android:maxLength="5" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
@@ -89,30 +82,31 @@
             android:orientation="horizontal">
 
             <TextView
-                android:textColor="@color/textColor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:paddingEnd="8dp"
                 android:text="@string/connect_as"
-                android:paddingEnd="8dp"/>
+                android:textColor="@color/textColor" />
 
             <RadioGroup
+                android:id="@+id/radio_connection_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checkedButton="@+id/first"
+                android:checkedButton="@id/connection_registered"
                 android:orientation="horizontal">
 
                 <RadioButton
-                    android:id="@+id/connection_01"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/connect_as_anonymous" />
-
-                <RadioButton
-                    android:id="@+id/connection_02"
+                    android:id="@+id/connection_registered"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/connect_as_registered" />
+
+                <RadioButton
+                    android:id="@+id/connection_anonymous"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/connect_as_anonymous" />
             </RadioGroup>
         </LinearLayout>
 
@@ -124,32 +118,30 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/username_layout"
                 style="@style/InputLayoutStyle"
-                android:hint="@string/hint_username"
-                app:helperText="@string/helper_username">
+                android:hint="@string/hint_username">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/id_username"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    style="@style/InputEditText" />
             </com.google.android.material.textfield.TextInputLayout>
 
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/password_layout"
                 style="@style/InputLayoutStyle"
-                android:hint="@string/hint_password"
-                app:helperText="@string/helper_password">
+                android:hint="@string/hint_password">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/id_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    style="@style/InputEditText"
+                    android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <RadioGroup
+                android:id="@+id/radio_remember_passowrd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checkedButton="@+id/first"
+                android:checkedButton="@id/save_pass_01"
                 android:orientation="vertical">
 
                 <RadioButton
@@ -172,6 +164,14 @@
             </RadioGroup>
 
         </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_connect"
+            style="@style/ButtonOutlined"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:text="@string/btn_connect" />
 
     </LinearLayout>
 </ScrollView>
