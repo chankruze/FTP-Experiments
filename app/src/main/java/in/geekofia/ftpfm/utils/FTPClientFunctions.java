@@ -1,33 +1,19 @@
 package in.geekofia.ftpfm.utils;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
-import android.widget.ListView;
 
-import androidx.core.app.ActivityCompat;
-
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
-import in.geekofia.ftpfm.R;
-import in.geekofia.ftpfm.activities.ConnectionActivity;
-import in.geekofia.ftpfm.activities.FileListingActivity;
-import in.geekofia.ftpfm.activities.FilesActivity;
-import in.geekofia.ftpfm.adapters.FileListAdapter;
 import in.geekofia.ftpfm.models.Item;
 
 
@@ -59,7 +45,7 @@ public class FTPClientFunctions {
         return false;
     }
 
-    public static boolean ftpListDirs(FTPClient mFTPClient){
+    public static boolean ftpListDirs(FTPClient mFTPClient) {
         FTPFile[] ftpDirs = new FTPFile[0];
         String rootPath = new String();
 
@@ -74,21 +60,6 @@ public class FTPClientFunctions {
             Log.d("CONNECT", "Directories in the ftp server are "
                     + ftpDirs[i].getName());
         }
-
-//        FTPFile[] ftpdirs2 = new FTPFile[0];
-//        try {
-//            ftpdirs2 = mFTPClient.listFiles(toppath);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        for (int i = 0; i < ftpdirs2.length; i++) {
-//            Log.d("CONNECT",
-//                    "File i need is  " + ftpdirs2[i].getName());
-//        }
-
-        //Retrieve all files in this directory
-//        File[] dirs = ftpDirs.listFiles();
-
 
         return false;
     }
@@ -136,7 +107,7 @@ public class FTPClientFunctions {
         private FTPClient mFTPClient;
         private String mPath;
 
-        public ListFTPFiles(FTPClient client, String path, List<Item> directories){
+        public ListFTPFiles(FTPClient client, String path, List<Item> directories) {
             this.mFTPClient = client;
             this.mPath = path;
             this.newDirectories = directories;
@@ -150,43 +121,160 @@ public class FTPClientFunctions {
                 FTPFile[] mFiles = mFTPClient.listFiles(mPath);
 
                 for (FTPFile mFile : mFiles) {
-                    Item item = new Item(Item.FILE, mFile.getName(), mFile.getSize(), mPath + "/" + mFile.getName());
-                    System.out.println("#######################");
-                    System.out.println("## Name " + mFile.getName());
-                    System.out.println("## Size " + mFile.getSize());
-                    System.out.println("## RawListing " + mFile.getRawListing());
-                    System.out.println("## Timestamp " + mFile.getTimestamp());
-                    System.out.println("## User " + mFile.getUser());
-                    System.out.println("## Group " + mFile.getGroup());
-                    System.out.println("## Type " + mFile.getType());
-                    System.out.println("#######################");
-                    System.out.println("## File Name : " + item.getName());
-                    System.out.println("## File Size : " + item.getSize());
-                    System.out.println("## File Abs Path : " + item.getAbsolutePath());
-                    System.out.println("#######################");
-                    files.add(item);
+                    if (mFile.isDirectory()) {
+                        Item mDir = new Item(Item.DIRECTORY, mFile.getName(), mFile.getSize(), mPath + mFile.getName() + "/");
+                        newDirectories.add(mDir);
+                    } else {
+                        String[] regexFileName = mFile.getName().toLowerCase().split("\\.");
+                        String mFileExt = "";
+
+                        if (regexFileName.length != 0) {
+                            mFileExt = regexFileName[regexFileName.length - 1];
+                        }
+
+                        int mFileType;
+
+                        switch (mFileExt) {
+                            case "apk":
+                            case "aab":
+                                mFileType = Item.FILE_APK;
+                                break;
+                            case "jpg":
+                            case "png":
+                            case "webp":
+                                mFileType = Item.FILE_IMAGE;
+                                break;
+                            case "mp3":
+                                mFileType = Item.FILE_AUDIO;
+                                break;
+                            case "mp4":
+                                mFileType = Item.FILE_VIDEO;
+                                break;
+                            case "pdf":
+                                mFileType = Item.FILE_PDF;
+                                break;
+                            case "txt":
+                            case "doc":
+                            case "docx":
+                                mFileType = Item.FILE_DOCUMENT;
+                                break;
+                            case "gif":
+                                mFileType = Item.FILE_GIF;
+                                break;
+                            case "torrent":
+                                mFileType = Item.FILE_TORRENT;
+                                break;
+                            case "zip":
+                            case "tar":
+                            case "gz":
+                            case "rar":
+                                mFileType = Item.FILE_ARCHIVE;
+                                break;
+                            case "exe":
+                                mFileType = Item.FILE_EXE;
+                                break;
+                            case "html":
+                                mFileType = Item.FILE_HTML;
+                                break;
+                            case "css":
+                                mFileType = Item.FILE_CSS;
+                                break;
+                            case "js":
+                                mFileType = Item.FILE_JS;
+                                break;
+                            case "php":
+                                mFileType = Item.FILE_PHP;
+                                break;
+                            case "sh":
+                                mFileType = Item.FILE_SHELL;
+                                break;
+                            case "lua":
+                                mFileType = Item.FILE_LUA;
+                                break;
+                            case "mk":
+                                mFileType = Item.FILE_MK;
+                                break;
+                            case "npm":
+                                mFileType = Item.FILE_NPM;
+                                break;
+                            case "python":
+                                mFileType = Item.FILE_PY;
+                                break;
+                            case "json":
+                                mFileType = Item.FILE_JSON;
+                                break;
+                            case "csr":
+                            case "crt":
+                            case "cer":
+                            case "crl":
+                            case "der":
+                            case "p7b":
+                            case "p7r":
+                            case "spc":
+                            case "sst":
+                            case "stl":
+                            case "pfx":
+                            case "p12":
+                                mFileType = Item.FILE_CERT;
+                                break;
+                            case "crypt12":
+                            case "db":
+                            case "sql":
+                                mFileType = Item.FILE_DB;
+                                break;
+                            case "key":
+                            case "pgp":
+                            case "pub":
+                                mFileType = Item.FILE_KEY;
+                                break;
+                            default:
+                                mFileType = Item.FILE;
+                        }
+
+                        Item item = new Item(mFileType, mFile.getName(), mFile.getSize(), mPath + mFile.getName() + "/");
+//                        System.out.println("#######################");
+//                        System.out.println("## Name " + mFile.getName());
+//                        System.out.println("## Size " + mFile.getSize());
+//                        System.out.println("## RawListing " + mFile.getRawListing());
+//                        System.out.println("## Timestamp " + mFile.getTimestamp());
+//                        System.out.println("## User " + mFile.getUser());
+//                        System.out.println("## Group " + mFile.getGroup());
+//                        System.out.println("## Type " + mFile.getType());
+//                        System.out.println("#######################");
+//                        System.out.println("## File Name : " + item.getName());
+//                        System.out.println("## File Size : " + item.getSize());
+//                        System.out.println("## File Abs Path : " + item.getAbsolutePath());
+//                        System.out.println("#######################");
+                        files.add(item);
+                    }
                 }
 
                 newDirectories.addAll(files);
 
                 System.out.println("## path " + mPath);
 
-                String[] splitedPath = mPath.split("/", 0);
-                String parentPath = "";
+                if (!mPath.isEmpty()){
+                    String[] splitedPathString = mPath.split("/", 0);
+                    List<String> splitedPath = new ArrayList<>(Arrays.asList(splitedPathString));
 
-                int depth = splitedPath.length;
-                int j = 0;
+                    String parentPath = "";
 
-                while (j < depth - 1){
-                    parentPath += splitedPath[j] + "/";
-                    j++;
+                    List<String> filters = new ArrayList<>();
+                    filters.add(parentPath);
+
+                    splitedPath.removeAll(filters);
+
+                    int depth = splitedPath.size();
+                    int j = 0;
+
+                    while (j < depth - 1) {
+                        parentPath += splitedPath.get(j) + "/";
+                        j++;
+                    }
+
+                    System.out.println("## Parent Path : " + parentPath);
+                    newDirectories.add(0, new Item(Item.UP, mPath, parentPath));
                 }
-
-                System.out.println("## Parent Path : " + parentPath);
-
-                newDirectories.add(0, new Item(Item.UP, "", parentPath));
-//                List<Item> directories = new ArrayList<>(files);
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
