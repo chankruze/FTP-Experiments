@@ -4,11 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RadioGroup;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -17,16 +16,17 @@ import org.apache.commons.net.ftp.FTPClient;
 
 import in.geekofia.ftpfm.R;
 
-import static in.geekofia.ftpfm.utils.FTPClientFunctions.*;
-
 public class ConnectionActivity extends AppCompatActivity {
 
 //    private Spinner mProtocalSpinner;
+    private String host, username, password;
+    private int port;
+
+    // Views
     private Button mButtonConnect;
     private TextInputLayout mHostLayout, mPortLayout, mUsernameLayout, mPasswordLayout;
     private TextInputEditText mHost, mPort, mUsername, mPassword;
-    private String host, username, password;
-    private int port;
+    private RadioGroup mRadioConnectionTypeGroup, mRadioRememberPasswordGroup;
 
     private FTPClient ftpclient;
 
@@ -40,6 +40,25 @@ public class ConnectionActivity extends AppCompatActivity {
         initViews();
 
         ftpclient = new FTPClient();
+
+        mRadioConnectionTypeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                // checkedId is the RadioButton selected
+                if (checkedId != R.id.connection_registered){
+                    mUsernameLayout.setVisibility(View.GONE);
+                    mPasswordLayout.setVisibility(View.GONE);
+                    mRadioRememberPasswordGroup.setVisibility(View.GONE);
+                    mUsername.setText("");
+                    mPassword.setText("");
+                } else {
+                    mUsernameLayout.setVisibility(View.VISIBLE);
+                    mPasswordLayout.setVisibility(View.VISIBLE);
+                    mRadioRememberPasswordGroup.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
         mButtonConnect.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,22 +74,6 @@ public class ConnectionActivity extends AppCompatActivity {
                 intent.putExtra("user", username);
                 intent.putExtra("pass", password);
                 startActivity(intent);
-
-                // Connect to FTP server
-//                new Thread(new Runnable() {
-//                    public void run() {
-//                        boolean status = false;
-//                        // host – your FTP address
-//                        // username & password – for your secured login
-//                        // 21 default gateway for FTP
-//                        status = ftpConnect(ftpclient, host, username, password, port);
-//                        if (status == true) {
-//                            Log.d(TAG, "Connection Success");
-//                        } else {
-//                            Log.d(TAG, "Connection failed");
-//                        }
-//                    }
-//                }).start();
             }
         });
 
@@ -83,6 +86,8 @@ public class ConnectionActivity extends AppCompatActivity {
         mPortLayout = findViewById(R.id.port_layout);
         mUsernameLayout = findViewById(R.id.username_layout);
         mPasswordLayout = findViewById(R.id.password_layout);
+        mRadioConnectionTypeGroup = findViewById(R.id.radio_connection_type);
+        mRadioRememberPasswordGroup = findViewById(R.id.radio_remember_passowrd);
 
 
         mHost = findViewById(R.id.id_host);
@@ -90,9 +95,7 @@ public class ConnectionActivity extends AppCompatActivity {
         mUsername = findViewById(R.id.id_username);
         mPassword = findViewById(R.id.id_password);
 
-        mHost.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
         mPort.setInputType(InputType.TYPE_CLASS_NUMBER);
         mUsername.setInputType(InputType.TYPE_CLASS_TEXT);
-        mPassword.setInputType(InputType.TYPE_NUMBER_VARIATION_PASSWORD);
     }
 }
