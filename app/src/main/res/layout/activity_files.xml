@@ -2,30 +2,38 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".activities.FileListingActivity">
+    android:layout_height="match_parent">
 
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/file_item"
-        android:divider="@null" />
+        android:divider="@null"
+        tools:listitem="@layout/file_item" />
 
-<!--    <ImageView-->
-<!--        android:id="@+id/error_logo"-->
-<!--        android:layout_centerInParent="true"-->
-<!--        android:layout_width="150sp"-->
-<!--        android:layout_height="150sp"-->
-<!--        android:src="@drawable/ic_alert" />-->
+    <ImageView
+        android:id="@+id/error_logo"
+        android:layout_width="150sp"
+        android:layout_height="150sp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/ic_alert" />
 
-<!--    <TextView-->
-<!--        android:id="@+id/error_desc"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="No Permission"-->
-<!--        android:layout_centerInParent="true"-->
-<!--        android:layout_below="@id/error_logo"-->
-<!--        style="@style/TextAppearance.AppCompat.Headline"/>-->
+    <TextView
+        android:id="@+id/error_text"
+        style="@style/TextAppearance.AppCompat.Headline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/error_logo"
+        android:layout_centerInParent="true"
+        android:text="No Permission" />
 
+    <Button
+        android:id="@+id/btn_edit_details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="16sp"
+        android:background="@android:color/transparent"
+        android:text="Edit Connection" />
 </RelativeLayout>
