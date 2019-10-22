@@ -51,4 +51,11 @@
     <string name="file_cert">Certificate</string>
     <string name="file_json">JavaScript Object Notation</string>
 
+    <string name="dl_confirm">Download confirmation</string>
+
+    <string name="option_info">Info</string>
+    <string name="option_rename">Rename</string>
+    <string name="option_delete">Delete</string>
+    <string name="option_download">Download</string>
+
 </resources>

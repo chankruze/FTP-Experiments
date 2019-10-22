@@ -1,10 +1,6 @@
 package in.geekofia.ftpfm.activities;
 
-import androidx.appcompat.app.AlertDialog;
-
 import android.app.ListActivity;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,12 +8,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +20,7 @@ import in.geekofia.ftpfm.adapters.FileListAdapter;
 import in.geekofia.ftpfm.models.Item;
 import in.geekofia.ftpfm.utils.ListFTPFiles;
 
+import static in.geekofia.ftpfm.utils.CustomFunctions.showFileOperations;
 import static in.geekofia.ftpfm.utils.FTPClientFunctions.ftpConnect;
 
 public class FilesActivity extends ListActivity {
@@ -167,40 +162,11 @@ public class FilesActivity extends ListActivity {
 
             adapter.notifyDataSetChanged();
         } else {
-            Toast.makeText(this, "A file man !", Toast.LENGTH_SHORT).show();
+            showFileOperations(this, v, item);
         }
     }
 
-
-    public void chooseFile(final Item item) {
-        AlertDialog.Builder newDialog = new AlertDialog.Builder(this);
-        newDialog.setTitle("Send file");
-        newDialog.setMessage("Are you sure you want to choose this file ?");
-
-        newDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Intent intent = getIntent();
-                intent.putExtra("filePath", item.getAbsolutePath());
-                setResult(RESULT_OK, intent);
-                finish();
-            }
-
-        });
-
-        newDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-
-        newDialog.show();
-    }
-
-//    @Override
+    //    @Override
 //    public void onBackPressed() {
 //        if(!currentDir.getName().equals(rootDirPath)){
 //            fillDirectory(currentDir.getParentFile());
