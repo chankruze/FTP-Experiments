@@ -170,8 +170,9 @@ public class FilesActivity extends ListActivity {
         super.onListItemClick(l, v, position, id);
 
         final Item item = (Item) adapter.getItem(position);
+        int mItemType = item.getTypeItem();
 
-        if (item.getTypeItem() == Item.DIRECTORY){
+        if (mItemType == Item.DIRECTORY || mItemType == Item.UP){
             ListFTPFiles listFTPFiles = new ListFTPFiles(ftpclient, item.getAbsolutePath(), directories);
             Thread thread = new Thread(listFTPFiles);
             thread.start();
