@@ -162,7 +162,7 @@ public class FilesActivity extends ListActivity {
 
             adapter.notifyDataSetChanged();
         } else {
-            showFileOperations(this, v, item);
+            showFileOperations(this, ftpclient,v, item);
         }
     }
 

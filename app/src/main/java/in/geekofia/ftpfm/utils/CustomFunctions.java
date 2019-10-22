@@ -15,8 +15,14 @@ import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.view.menu.MenuPopupHelper;
 import androidx.core.content.ContextCompat;
 
+import org.apache.commons.net.ftp.FTPClient;
+
+import java.io.IOException;
+
 import in.geekofia.ftpfm.R;
 import in.geekofia.ftpfm.models.Item;
+
+import static in.geekofia.ftpfm.utils.FTPClientFunctions.ftpFileDownload;
 
 public class CustomFunctions {
 
@@ -44,7 +50,7 @@ public class CustomFunctions {
         view.setLayoutParams(layoutParams);
     }
 
-    public static void fileDownload(final Context context, final Item item){
+    public static void fileDownload(final Context context, final FTPClient mFTPClient, final Item item){
         AlertDialog.Builder newDialog = new AlertDialog.Builder(context);
         newDialog.setTitle(getString(context, R.string.dl_confirm));
         newDialog.setMessage("Are you sure you want to download " + item.getName() + " ?");
@@ -53,10 +59,16 @@ public class CustomFunctions {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-//                Intent intent = getIntent();
-//                intent.putExtra("filePath", item.getAbsolutePath());
-//                setResult(RESULT_OK, intent);
-//                finish();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ftpFileDownload(mFTPClient, item.getAbsolutePath(), item.getName(), null, null);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
                 Toast.makeText(context, "Downloading " + item.getName(), Toast.LENGTH_LONG).show();
             }
 
@@ -73,7 +85,7 @@ public class CustomFunctions {
         newDialog.show();
     }
 
-    public static void showFileOperations(final Context context, View view, final Item mItem) {
+    public static void showFileOperations(final Context context, final FTPClient mFTPClient, View view, final Item mItem) {
         // Setup Popup Menu
         MenuBuilder menuBuilder = new MenuBuilder(context);
         MenuInflater inflater = new MenuInflater(context);
@@ -92,7 +104,7 @@ public class CustomFunctions {
                         Toast.makeText(context, "Info selected", Toast.LENGTH_SHORT).show();
                         return true;
                     case R.id.option_download:
-                        fileDownload(context, mItem);
+                        fileDownload(context, mFTPClient, mItem);
                         return true;
                     case R.id.option_rename:
 //                        fileRename(context, mItem);
