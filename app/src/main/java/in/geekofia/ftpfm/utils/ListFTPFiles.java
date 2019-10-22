@@ -50,12 +50,18 @@ public class ListFTPFiles implements Runnable {
                         case "jpg":
                         case "png":
                         case "webp":
+                        case "svg":
+                        case "ico":
                             mFileType = Item.FILE_IMAGE;
                             break;
                         case "mp3":
+                        case "ogg":
+                        case "aac":
                             mFileType = Item.FILE_AUDIO;
                             break;
                         case "mp4":
+                        case "mkv":
+                        case "avi":
                             mFileType = Item.FILE_VIDEO;
                             break;
                         case "pdf":
