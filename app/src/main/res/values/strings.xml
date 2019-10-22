@@ -24,4 +24,31 @@
     <string name="hint_username">Username</string>
     <string name="helper_password">Enter password</string>
     <string name="hint_password">Password</string>
+
+    <!-- File Types -->
+    <string name="file_generic">File</string>
+    <string name="file_apk">Android Application</string>
+    <string name="file_image">Image File</string>
+    <string name="file_video">Video File</string>
+    <string name="file_audio">Audio File</string>
+    <string name="file_pdf">Portable Document Format</string>
+    <string name="file_doucment">Document</string>
+    <string name="file_exe">Windows Executable</string>
+    <string name="file_shell">Shell Script</string>
+    <string name="file_gif">Graphics Interchange Format</string>
+    <string name="file_db">Database File</string>
+    <string name="file_key">Key File</string>
+    <string name="file_torrent">Torrent File</string>
+    <string name="file_archive">Compressed Archive</string>
+    <string name="file_html">Hypertext Markup Language</string>
+    <string name="file_css">Cascading Style Sheets</string>
+    <string name="file_js">JavaScript</string>
+    <string name="file_php">PHP: Hypertext Preprocessor</string>
+    <string name="file_py">Python</string>
+    <string name="file_lua">Lua Script</string>
+    <string name="file_mk">Makefile</string>
+    <string name="file_npm">Node Package Manager</string>
+    <string name="file_cert">Certificate</string>
+    <string name="file_json">JavaScript Object Notation</string>
+
 </resources>

@@ -1,5 +1,7 @@
 package in.geekofia.ftpfm.models;
 
+import in.geekofia.ftpfm.R;
+
 public class Item {
 
     public static final int DIRECTORY = 1;
@@ -29,52 +31,81 @@ public class Item {
     public static final int FILE_CERT = 221;
     public static final int FILE_JSON = 222;
 
-    private int typeItem;
-    private String name;
+    private int typeItem, numItems, iconId, typeId;
+    private String name, date, time, absolutePath;
     private long size;
-    private String absolutePath;
-    private int numItems;
 
+    // Constructors //
 
-    public int getTypeItem() {
-        return typeItem;
-    }
-    public void setTypeItem(int typeItem) {
+    // for directory
+    public Item(int typeItem, String name, int numItems, String absolutePath){
+        this.iconId = R.drawable.ic_folder;
         this.typeItem = typeItem;
+        this.name = name;
+        this.numItems = numItems;
+        this.absolutePath = absolutePath;
     }
+
+    // for file
+    public Item(int iconId, int typeItem, String name, long size, String date, String time, String absolutePath, int typeId){
+        this.iconId = iconId;
+        this.typeItem = typeItem;
+        this.name = name;
+        this.size = size;
+        this.date = date;
+        this.time = time;
+        this.absolutePath = absolutePath;
+        this.typeId = typeId;
+    }
+
+    // for UP link
+    public Item(int typeItem, String display, String parentPath){
+        this.iconId = R.drawable.ic_back;
+        this.typeItem = typeItem;
+        this.name = display;
+        this.absolutePath = parentPath;
+    }
+
+    // Getters //
+    public int getIconId(){
+        return iconId;
+    }
+
     public String getName() {
         return name;
     }
+
+    public String getDate() {
+        return date;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
     public long getSize() {
         return size;
     }
+
     public String getAbsolutePath() {
         return absolutePath;
     }
+
     public int getNumItems() {
         return numItems;
     }
 
-    //Constructor for directory
-    public Item(int typeItem, String name, long size, String absolutePath){
-        this.typeItem = typeItem;
-        this.name = name;
-        this.size = size;
-        this.absolutePath = absolutePath;
+    public int getTypeItem() {
+        return typeItem;
     }
 
-    //Constructor for file
-    public Item(int typeItem, String name, int numItems, String absolutePath){
-        this.typeItem = typeItem;
-        this.name = name;
-        this.absolutePath = absolutePath;
-        this.numItems = numItems;
+    public int getTypeId() {
+        return typeId;
     }
 
-    //Constructor for UP link
-    public Item(int typeItem, String display, String parentPath){
+    // setters //
+
+    public void setTypeItem(int typeItem) {
         this.typeItem = typeItem;
-        this.name = display;
-        this.absolutePath = parentPath;
     }
 }

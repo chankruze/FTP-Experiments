@@ -54,8 +54,9 @@ public class FileListAdapter extends BaseAdapter {
             cache.name = view.findViewById(R.id.file_name);
             cache.icon = view.findViewById(R.id.file_icon);
             cache.details = view.findViewById(R.id.file_details);
-            cache.date = view.findViewById(R.id.file_date);
             cache.size = view.findViewById(R.id.file_size);
+            cache.date = view.findViewById(R.id.file_date);
+            cache.time = view.findViewById(R.id.file_time);
             cache.type = view.findViewById(R.id.file_type);
 
             view.setTag(cache);
@@ -72,7 +73,7 @@ public class FileListAdapter extends BaseAdapter {
                 toggleProp(cache.name, RelativeLayout.CENTER_VERTICAL, true);
                 cache.details.setVisibility(View.GONE);
                 if(item.getNumItems() > 0){
-                    cache.icon.setImageDrawable(getDrawable(mContext, R.drawable.ic_folder));
+                    cache.icon.setImageDrawable(getDrawable(mContext, item.getIconId()));
                 }
                 else{
                     cache.icon.setImageDrawable(getDrawable(mContext, R.drawable.ic_folder));
@@ -83,166 +84,16 @@ public class FileListAdapter extends BaseAdapter {
                 toggleProp(cache.name, RelativeLayout.CENTER_VERTICAL, false);
                 cache.details.setVisibility(View.VISIBLE);
                 cache.size.setText(mDetails);
-                cache.icon.setImageDrawable(getDrawable(mContext, R.drawable.ic_file_generic));
-                break;
-            case Item.FILE_APK:
-                cache.name.setText(item.getName());
-                toggleProp(cache.name, RelativeLayout.CENTER_VERTICAL, false);
-                cache.details.setVisibility(View.VISIBLE);
-                cache.size.setText(mDetails);
-                cache.icon.setImageDrawable(getDrawable(mContext, R.drawable.ic_file_apk));
-                break;
-            case Item.FILE_IMAGE:
-                cache.name.setText(item.getName());
-                toggleProp(cache.name, RelativeLayout.CENTER_VERTICAL, false);
-                cache.details.setVisibility(View.VISIBLE);
-                cache.size.setText(mDetails);
-                cache.icon.setImageDrawable(getDrawable(mContext, R.drawable.ic_file_image));
-                break;
-            case Item.FILE_AUDIO:
-                cache.name.setText(item.getName());
-                toggleProp(cache.name, RelativeLayout.CENTER_VERTICAL, false);
-                cache.details.setVisibility(View.VISIBLE);
-                cache.size.setText(mDetails);
-                cache.icon.setImageDrawable(getDrawable(mContext, R.drawable.ic_file_audio));
-                break;
-            case Item.FILE_VIDEO:
-                cache.name.setText(item.getName());
-                toggleProp(cache.name, RelativeLayout.CENTER_VERTICAL, false);
-                cache.details.setVisibility(View.VISIBLE);
-                cache.size.setText(mDetails);
-                cache.icon.setImageDrawable(getDrawable(mContext, R.drawable.ic_file_video));
-                break;
-            case Item.FILE_PDF:
-                cache.name.setText(item.getName());
-                toggleProp(cache.name, RelativeLayout.CENTER_VERTICAL, false);
-                cache.details.setVisibility(View.VISIBLE);
-                cache.size.setText(mDetails);
-                cache.icon.setImageDrawable(getDrawable(mContext, R.drawable.ic_file_pdf));
-                break;
-            case Item.FILE_DOCUMENT:
-                cache.name.setText(item.getName());
-                cache.details.setVisibility(View.VISIBLE);
-                cache.size.setText(mDetails);
-                cache.icon.setImageDrawable(getDrawable(mContext, R.drawable.ic_file_document));
-                break;
-            case Item.FILE_GIF:
-                cache.name.setText(item.getName());
-                toggleProp(cache.name, RelativeLayout.CENTER_VERTICAL, false);
-                cache.details.setVisibility(View.VISIBLE);
-                cache.size.setText(mDetails);
-                cache.icon.setImageDrawable(getDrawable(mContext, R.drawable.ic_file_gif));
-                break;
-            case Item.FILE_DB:
-                cache.name.setText(item.getName());
-                toggleProp(cache.name, RelativeLayout.CENTER_VERTICAL, false);
-                cache.details.setVisibility(View.VISIBLE);
-                cache.size.setText(mDetails);
-                cache.icon.setImageDrawable(getDrawable(mContext, R.drawable.ic_file_db));
-                break;
-            case Item.FILE_ARCHIVE:
-                cache.name.setText(item.getName());
-                toggleProp(cache.name, RelativeLayout.CENTER_VERTICAL, false);
-                cache.details.setVisibility(View.VISIBLE);
-                cache.size.setText(mDetails);
-                cache.icon.setImageDrawable(getDrawable(mContext, R.drawable.ic_file_archive));
-                break;
-            case Item.FILE_EXE:
-                cache.name.setText(item.getName());
-                toggleProp(cache.name, RelativeLayout.CENTER_VERTICAL, false);
-                cache.details.setVisibility(View.VISIBLE);
-                cache.size.setText(mDetails);
-                cache.icon.setImageDrawable(getDrawable(mContext, R.drawable.ic_file_exe));
-                break;
-            case Item.FILE_HTML:
-                cache.name.setText(item.getName());
-                toggleProp(cache.name, RelativeLayout.CENTER_VERTICAL, false);
-                cache.details.setVisibility(View.VISIBLE);
-                cache.size.setText(mDetails);
-                cache.icon.setImageDrawable(getDrawable(mContext, R.drawable.ic_file_html));
-                break;
-            case Item.FILE_CSS:
-                cache.name.setText(item.getName());
-                toggleProp(cache.name, RelativeLayout.CENTER_VERTICAL, false);
-                cache.details.setVisibility(View.VISIBLE);
-                cache.size.setText(mDetails);
-                cache.icon.setImageDrawable(getDrawable(mContext, R.drawable.ic_file_css));
-                break;
-            case Item.FILE_JS:
-                cache.name.setText(item.getName());
-                toggleProp(cache.name, RelativeLayout.CENTER_VERTICAL, false);
-                cache.details.setVisibility(View.VISIBLE);
-                cache.size.setText(mDetails);
-                cache.icon.setImageDrawable(getDrawable(mContext, R.drawable.ic_file_js));
-                break;
-            case Item.FILE_JSON:
-                cache.name.setText(item.getName());
-                toggleProp(cache.name, RelativeLayout.CENTER_VERTICAL, false);
-                cache.details.setVisibility(View.VISIBLE);
-                cache.size.setText(mDetails);
-                cache.icon.setImageDrawable(getDrawable(mContext, R.drawable.ic_file_json));
-                break;
-            case Item.FILE_PHP:
-                cache.name.setText(item.getName());
-                toggleProp(cache.name, RelativeLayout.CENTER_VERTICAL, false);
-                cache.details.setVisibility(View.VISIBLE);
-                cache.size.setText(mDetails);
-                cache.icon.setImageDrawable(getDrawable(mContext, R.drawable.ic_file_php));
-                break;
-            case Item.FILE_SHELL:
-                cache.name.setText(item.getName());
-                toggleProp(cache.name, RelativeLayout.CENTER_VERTICAL, false);
-                cache.details.setVisibility(View.VISIBLE);
-                cache.size.setText(mDetails);
-                cache.icon.setImageDrawable(getDrawable(mContext, R.drawable.ic_file_shell));
-                break;
-            case Item.FILE_LUA:
-                cache.name.setText(item.getName());
-                toggleProp(cache.name, RelativeLayout.CENTER_VERTICAL, false);
-                cache.details.setVisibility(View.VISIBLE);
-                cache.size.setText(mDetails);
-                cache.icon.setImageDrawable(getDrawable(mContext, R.drawable.ic_file_lua));
-                break;
-            case Item.FILE_MK:
-                cache.name.setText(item.getName());
-                toggleProp(cache.name, RelativeLayout.CENTER_VERTICAL, false);
-                cache.details.setVisibility(View.VISIBLE);
-                cache.size.setText(mDetails);
-                cache.icon.setImageDrawable(getDrawable(mContext, R.drawable.ic_file_makefile));
-                break;
-            case Item.FILE_NPM:
-                cache.name.setText(item.getName());
-                toggleProp(cache.name, RelativeLayout.CENTER_VERTICAL, false);
-                cache.details.setVisibility(View.VISIBLE);
-                cache.size.setText(mDetails);
-                cache.icon.setImageDrawable(getDrawable(mContext, R.drawable.ic_file_npm));
-                break;
-            case Item.FILE_PY:
-                cache.name.setText(item.getName());
-                toggleProp(cache.name, RelativeLayout.CENTER_VERTICAL, false);
-                cache.details.setVisibility(View.VISIBLE);
-                cache.size.setText(mDetails);
-                cache.icon.setImageDrawable(getDrawable(mContext, R.drawable.ic_file_python));
-                break;
-            case Item.FILE_CERT:
-                cache.name.setText(item.getName());
-                toggleProp(cache.name, RelativeLayout.CENTER_VERTICAL, false);
-                cache.details.setVisibility(View.VISIBLE);
-                cache.size.setText(mDetails);
-                cache.icon.setImageDrawable(getDrawable(mContext, R.drawable.ic_file_certificate));
-                break;
-            case Item.FILE_KEY:
-                cache.name.setText(item.getName());
-                toggleProp(cache.name, RelativeLayout.CENTER_VERTICAL, false);
-                cache.details.setVisibility(View.VISIBLE);
-                cache.size.setText(mDetails);
-                cache.icon.setImageDrawable(getDrawable(mContext, R.drawable.ic_file_key));
+                cache.date.setText(item.getDate());
+                cache.time.setText(item.getTime());
+                cache.icon.setImageDrawable(getDrawable(mContext, item.getIconId()));
+                cache.type.setText(getString(mContext, item.getTypeId()));
                 break;
             case Item.UP:
                 cache.name.setText(item.getName());
                 toggleProp(cache.name, RelativeLayout.CENTER_VERTICAL, true);
                 cache.details.setVisibility(View.GONE);
-                cache.icon.setImageDrawable(getDrawable(mContext, R.drawable.ic_back));
+                cache.icon.setImageDrawable(getDrawable(mContext, item.getIconId()));
                 break;
         }
 

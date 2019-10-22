@@ -7,11 +7,18 @@ import android.widget.RelativeLayout;
 
 import androidx.core.content.ContextCompat;
 
+import in.geekofia.ftpfm.R;
+
 public class CustomFunctions {
 
     // Custom getDRawable function
-    public static Drawable getDrawable(Context context, int drawable) {
-        return ContextCompat.getDrawable(context, drawable);
+    public static Drawable getDrawable(Context context, int resDrawable) {
+        return ContextCompat.getDrawable(context, resDrawable);
+    }
+
+    // Custom getString function
+    public static String getString(Context context, int resString) {
+        return context.getResources().getString(resString);
     }
 
     // Toggle relative layout specific child properties

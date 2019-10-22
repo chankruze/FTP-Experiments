@@ -7,5 +7,5 @@ import android.widget.TextView;
 public class CacheView{
     public ImageView icon;
     public LinearLayout details;
-    public TextView name, date, size, type;
+    public TextView name, size, date, time, type;
 }

@@ -86,36 +86,17 @@ public class FilesActivity extends ListActivity {
                         }
                     });
 
+                    ListFTPFiles listFTPFiles = new ListFTPFiles(ftpclient, "/", directories);
+                    Thread thread = new Thread(listFTPFiles);
+                    thread.start();
                     try {
-                        ftpDirs = ftpclient.listDirectories();
-                    } catch (IOException e) {
+                        thread.join();
+                    } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
 
-//                    for (int i = 0; i < ftpDirs.length; i++) {
-//                        rootPath = ftpDirs[0].getName();
-//                        Log.d("CONNECT", "Directories in the ftp server are "
-//                                + ftpDirs[i].getName());
-//                    }
-
-                    for (FTPFile f : ftpDirs) {
-                        // is a directory
-                        if (f.isDirectory()) {
-                            Item item = new Item(Item.DIRECTORY, f.getName(), f.getSize(), f.getName() + "/");
-                            directories.add(item);
-                        }
-                        // is a file
-                        else {
-                            Item item = new Item(Item.FILE, f.getName(), f.getSize(), f.getName() + "/");
-                            files.add(item);
-                        }
-                    }
-
-                    directories.addAll(files);
-
-//                    if(!currentDir.getName().equals(rootPath)){
-//                        directories.add(0, new Item(Item.UP, "", currentDir.getParent()));
-//                    }
+                    directories = listFTPFiles.getNewDirectories();
+                    directories.remove(0);
 
                     runOnUiThread(new Runnable() {
                         @Override
