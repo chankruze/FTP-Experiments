@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
@@ -23,7 +24,7 @@ import java.util.List;
 import in.geekofia.ftpfm.R;
 import in.geekofia.ftpfm.adapters.FileListAdapter;
 import in.geekofia.ftpfm.models.Item;
-import in.geekofia.ftpfm.utils.FTPClientFunctions;
+import in.geekofia.ftpfm.utils.ListFTPFiles;
 
 import static in.geekofia.ftpfm.utils.FTPClientFunctions.ftpConnect;
 
@@ -170,20 +171,22 @@ public class FilesActivity extends ListActivity {
 
         final Item item = (Item) adapter.getItem(position);
 
-        System.out.println("On List Item click");
+        if (item.getTypeItem() == Item.DIRECTORY){
+            ListFTPFiles listFTPFiles = new ListFTPFiles(ftpclient, item.getAbsolutePath(), directories);
+            Thread thread = new Thread(listFTPFiles);
+            thread.start();
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
-        FTPClientFunctions.ListFTPFiles listFTPFiles = new FTPClientFunctions.ListFTPFiles(ftpclient, item.getAbsolutePath(), directories);
-        Thread thread = new Thread(listFTPFiles);
-        thread.start();
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            directories = listFTPFiles.getNewDirectories();
+
+            adapter.notifyDataSetChanged();
+        } else {
+            Toast.makeText(this, "A file man !", Toast.LENGTH_SHORT).show();
         }
-
-        directories = listFTPFiles.getNewDirectories();
-
-        adapter.notifyDataSetChanged();
     }
 
 
