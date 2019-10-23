@@ -1,6 +1,9 @@
 package in.geekofia.ftpfm.utils;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 
@@ -23,6 +26,8 @@ import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
 import in.geekofia.ftpfm.R;
+
+import static in.geekofia.ftpfm.utils.CustomFunctions.getString;
 
 public class FTPClientFunctions {
 
@@ -98,6 +103,14 @@ public class FTPClientFunctions {
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(mContext);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(mContext, R.string.channel_name);
+            String description = getString(mContext, R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel(DOWNLOAD_CHANNEL_ID, name, importance);
+            notificationManagerCompat.createNotificationChannel(channel);
+        }
+
         final int progressMax = 100;
         double currentProgress = 0;
         long downloadedFileSize = 0;
@@ -146,7 +159,7 @@ public class FTPClientFunctions {
                 .setSmallIcon(R.drawable.ic_download)
                 .setContentTitle(mRemoteFileName)
                 .setContentText(currentProgress + " %")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setOngoing(true)
                 .setOnlyAlertOnce(true)
                 .setProgress(progressMax, 0, false);
