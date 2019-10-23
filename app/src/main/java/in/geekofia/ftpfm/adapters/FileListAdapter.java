@@ -73,10 +73,10 @@ public class FileListAdapter extends BaseAdapter {
                 toggleProp(cache.name, RelativeLayout.CENTER_VERTICAL, true);
                 cache.details.setVisibility(View.GONE);
                 if(item.getNumItems() > 0){
-                    cache.icon.setImageDrawable(getDrawable(mContext, item.getIconId()));
+                    cache.icon.setImageDrawable(fetchDrawable(mContext, item.getIconId()));
                 }
                 else{
-                    cache.icon.setImageDrawable(getDrawable(mContext, R.drawable.ic_folder));
+                    cache.icon.setImageDrawable(fetchDrawable(mContext, R.drawable.ic_folder));
                 }
                 break;
             case Item.FILE:
@@ -86,14 +86,14 @@ public class FileListAdapter extends BaseAdapter {
                 cache.size.setText(mDetails);
                 cache.date.setText(item.getDate());
                 cache.time.setText(item.getTime());
-                cache.icon.setImageDrawable(getDrawable(mContext, item.getIconId()));
-                cache.type.setText(getString(mContext, item.getTypeId()));
+                cache.icon.setImageDrawable(fetchDrawable(mContext, item.getIconId()));
+                cache.type.setText(fetchString(mContext, item.getTypeId()));
                 break;
             case Item.UP:
                 cache.name.setText(item.getName());
                 toggleProp(cache.name, RelativeLayout.CENTER_VERTICAL, true);
                 cache.details.setVisibility(View.GONE);
-                cache.icon.setImageDrawable(getDrawable(mContext, item.getIconId()));
+                cache.icon.setImageDrawable(fetchDrawable(mContext, item.getIconId()));
                 break;
         }
 

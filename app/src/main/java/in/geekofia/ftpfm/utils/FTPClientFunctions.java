@@ -27,7 +27,7 @@ import org.apache.commons.net.ftp.FTPReply;
 
 import in.geekofia.ftpfm.R;
 
-import static in.geekofia.ftpfm.utils.CustomFunctions.getString;
+import static in.geekofia.ftpfm.utils.CustomFunctions.fetchString;
 
 public class FTPClientFunctions {
 
@@ -104,8 +104,8 @@ public class FTPClientFunctions {
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(mContext);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = getString(mContext, R.string.channel_name);
-            String description = getString(mContext, R.string.channel_description);
+            CharSequence name = fetchString(mContext, R.string.channel_name);
+            String description = fetchString(mContext, R.string.channel_description);
             int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel channel = new NotificationChannel(DOWNLOAD_CHANNEL_ID, name, importance);
             notificationManagerCompat.createNotificationChannel(channel);

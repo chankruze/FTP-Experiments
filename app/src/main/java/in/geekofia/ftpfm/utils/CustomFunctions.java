@@ -27,12 +27,12 @@ import static in.geekofia.ftpfm.utils.FTPClientFunctions.ftpFileDownload;
 public class CustomFunctions {
 
     // Custom getDRawable function
-    public static Drawable getDrawable(Context context, int resDrawable) {
+    public static Drawable fetchDrawable(Context context, int resDrawable) {
         return ContextCompat.getDrawable(context, resDrawable);
     }
 
-    // Custom getString function
-    public static String getString(Context context, int resString) {
+    // Custom fetchString function
+    public static String fetchString(Context context, int resString) {
         return context.getResources().getString(resString);
     }
 
@@ -50,9 +50,9 @@ public class CustomFunctions {
         view.setLayoutParams(layoutParams);
     }
 
-    public static void fileDownload(final Context context, final FTPClient mFTPClient, final Item item){
+    private static void fileDownload(final Context context, final FTPClient mFTPClient, final Item item){
         AlertDialog.Builder newDialog = new AlertDialog.Builder(context);
-        newDialog.setTitle(getString(context, R.string.dl_confirm));
+        newDialog.setTitle(fetchString(context, R.string.dl_confirm));
         newDialog.setMessage("Are you sure you want to download " + item.getName() + " ?");
 
         newDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
@@ -63,12 +63,13 @@ public class CustomFunctions {
                     @Override
                     public void run() {
                         try {
-                            ftpFileDownload(mFTPClient, item.getAbsolutePath(), item.getName(), null, null);
+                            ftpFileDownload(mFTPClient, context, item.getAbsolutePath(), item.getName(), null, null, item.getSize());
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
                 }).start();
+
                 Toast.makeText(context, "Downloading " + item.getName(), Toast.LENGTH_LONG).show();
             }
 
@@ -100,8 +101,7 @@ public class CustomFunctions {
             public boolean onMenuItemSelected(MenuBuilder menu, MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.option_info:
-//                        fileInfo(context, mItem);
-                        Toast.makeText(context, "Info selected", Toast.LENGTH_SHORT).show();
+                        fileInfo(context, mItem);
                         return true;
                     case R.id.option_download:
                         fileDownload(context, mFTPClient, mItem);
