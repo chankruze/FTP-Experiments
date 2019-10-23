@@ -58,4 +58,6 @@
     <string name="option_delete">Delete</string>
     <string name="option_download">Download</string>
 
+    <string name="channel_name">FTP File Manager Download</string>
+    <string name="channel_description">Shows download notification</string>
 </resources>

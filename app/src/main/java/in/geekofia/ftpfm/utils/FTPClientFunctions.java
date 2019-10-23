@@ -4,6 +4,9 @@ import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,19 +15,18 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.text.DecimalFormat;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
-import in.geekofia.ftpfm.models.Item;
-
+import in.geekofia.ftpfm.R;
 
 public class FTPClientFunctions {
+
+    private static String DOWNLOAD_CHANNEL_ID = "FTP_DOWNLOAD";
 
     public static boolean ftpConnect(FTPClient mFTPClient, String host, String username, String password, int port) {
         try {
@@ -83,12 +85,23 @@ public class FTPClientFunctions {
         return false;
     }
 
-    public static void ftpFileDownload(FTPClient mFTPClient, String mRemoteFilePath, String mRemoteFileName, String localFilePath, String localFileName) throws IOException {
-        String remoteFile = mRemoteFilePath;
+    /**
+     *
+     * FTP FILE DOWNLOAD
+     *
+     */
+    public static void ftpFileDownload(final FTPClient mFTPClient, Context mContext, final String mRemoteFilePath, String mRemoteFileName, String localFilePath, String localFileName, long mFileSize) throws IOException {
         String mLocalFilePath, mLocalFileName;
         InputStream inputStream = null;
         OutputStream outputStream = null;
         boolean success;
+
+        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(mContext);
+
+        final int progressMax = 100;
+        double currentProgress = 0;
+        long downloadedFileSize = 0;
+        int DOWNLOAD_NOTIFICATION_ID = (int)(Math.random() * 100);
 
         if (localFilePath == "" || localFilePath == null){
             String FTP_FOLDER = "FTP";
@@ -117,52 +130,58 @@ public class FTPClientFunctions {
             System.out.println("## Exception [outputStream] ");
         }
 
-        try {
-            inputStream = mFTPClient.retrieveFileStream(remoteFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("## Exception [inputStream] ");
-        }
+        inputStream = mFTPClient.retrieveFileStream(mRemoteFilePath);
+//        MyInputStream myInputStream = new MyInputStream(mFTPClient, mRemoteFilePath);
+//        Thread thread = new Thread(myInputStream);
+//        thread.start();
+//        try {
+//            thread.join();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//
+//        inputStream = myInputStream.getInputStream();
+
+        NotificationCompat.Builder notification = new NotificationCompat.Builder(mContext, DOWNLOAD_CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_download)
+                .setContentTitle(mRemoteFileName)
+                .setContentText(currentProgress + " %")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setOngoing(true)
+                .setOnlyAlertOnce(true)
+                .setProgress(progressMax, 0, false);
+
+        notificationManagerCompat.notify(DOWNLOAD_NOTIFICATION_ID, notification.build());
+
         byte[] bytesArray = new byte[4096];
         int bytesRead = -1;
 
         while ((bytesRead = inputStream.read(bytesArray)) != -1) {
-            try {
-                if (outputStream != null) {
-                    outputStream.write(bytesArray, 0, bytesRead);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                System.out.println("## Exception [outputStream.write] ");
-            }
-        }
-
-        try {
-            success = mFTPClient.completePendingCommand();
-
-            if (success) {
-                System.out.println(mRemoteFileName + " has been downloaded successfully.");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("## Exception [completePendingCommand()] ");
-        }
-
-        try {
             if (outputStream != null) {
-                outputStream.close();
+                outputStream.write(bytesArray, 0, bytesRead);
+                downloadedFileSize += bytesRead;
+                currentProgress = Double.parseDouble((new DecimalFormat("##.##").format(100.0 * downloadedFileSize / mFileSize)));
+                notification.setProgress(progressMax, (int)currentProgress, false)
+                        .setContentText(currentProgress + " %");
+                notificationManagerCompat.notify(DOWNLOAD_NOTIFICATION_ID, notification.build());
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("## Exception [outputStream.close()] ");
         }
 
-        try {
-            inputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("## Exception [inputStream.close()] ");
+        success = mFTPClient.completePendingCommand();
+
+        if (success) {
+            notification.setContentText("Download finished")
+                    .setProgress(0, 0, false)
+                    .setOngoing(false);
+            notificationManagerCompat.notify(DOWNLOAD_NOTIFICATION_ID, notification.build());
+            System.out.println(mRemoteFileName + " has been downloaded successfully.");
         }
+
+        if (outputStream != null) {
+            outputStream.close();
+        }
+
+        inputStream.close();
     }
 
     public static boolean ftpUpload(FTPClient mFTPClient, String srcFilePath, String desFileName, String desDirectory, Context context) {
