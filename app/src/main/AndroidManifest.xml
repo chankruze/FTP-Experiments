@@ -13,7 +13,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".activities.FilesActivity"></activity>
-        <activity android:name=".activities.FileListingActivity" />
         <activity android:name=".activities.ConnectionActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
