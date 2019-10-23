@@ -49,7 +49,7 @@
 //
 //
 //        Bundle b = getIntent().getExtras();
-//        currentDir = new File("ftp://" + b.getString("currentDir") + "/");
+//        currentDir = new File("ftp://" + b.fetchString("currentDir") + "/");
 //        System.out.println(TAG + "==> Current direcory " + currentDir);
 //
 //        //permission
