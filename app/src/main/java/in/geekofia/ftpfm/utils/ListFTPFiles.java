@@ -176,32 +176,7 @@ public class ListFTPFiles implements Runnable {
                             mFileType = R.string.file_generic;
                     }
 
-                    String[] splitedRawListing = mFile.getRawListing().split(" ");
-                    List<String> splitedRawList = new ArrayList<>(Arrays.asList(splitedRawListing));
-
-                    List<String> filters = new ArrayList<>();
-                    filters.add("");
-
-                    splitedRawList.removeAll(filters);
-
-                    String mDate = splitedRawList.get(6) + " " + splitedRawList.get(5);
-                    String mTime = splitedRawList.get(7);
-
-                    Item item = new Item(mIconId, Item.FILE, mFile.getName(), mFile.getSize(), mDate, mTime, mPath + mFile.getName() + "/", mFileType);
-//                        System.out.println("#######################");
-//                        System.out.println("## Name " + mFile.getName());
-//                        System.out.println("## Size " + mFile.getSize());
-//                        System.out.println("## RawListing " + mFile.getRawListing());
-//                        System.out.println("## Timestamp " + mFile.getTimestamp());
-//                        System.out.println("## User " + mFile.getUser());
-//                        System.out.println("## Group " + mFile.getGroup());
-//                        System.out.println("## Type " + mFile.getType());
-//                        System.out.println("#######################");
-//                        System.out.println("## File Name : " + item.getName());
-//                        System.out.println("## File Size : " + item.getSize());
-//                        System.out.println("## File Abs Path : " + item.getAbsolutePath());
-//                        System.out.println("#######################");
-
+                    Item item = new Item(Item.FILE, mFile, mIconId, mPath + mFile.getName() + "/", mFileType);
                     files.add(item);
                 }
             }

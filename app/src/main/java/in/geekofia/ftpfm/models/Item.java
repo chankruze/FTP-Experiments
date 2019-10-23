@@ -1,6 +1,9 @@
 package in.geekofia.ftpfm.models;
 
+import org.apache.commons.net.ftp.FTPFile;
+
 import in.geekofia.ftpfm.R;
+import in.geekofia.ftpfm.utils.RawListingUtil;
 
 public class Item {
 
@@ -32,7 +35,7 @@ public class Item {
     public static final int FILE_JSON = 222;
 
     private int typeItem, numItems, iconId, typeId;
-    private String name, date, time, absolutePath;
+    private String permission, name, user, group, date, time, absolutePath;
     private long size;
 
     // Constructors //
@@ -47,13 +50,17 @@ public class Item {
     }
 
     // for file
-    public Item(int iconId, int typeItem, String name, long size, String date, String time, String absolutePath, int typeId){
-        this.iconId = iconId;
+    public Item(int typeItem, FTPFile file, int iconId, String absolutePath, int typeId){
+        RawListingUtil rawListingUtil = new RawListingUtil(file);
         this.typeItem = typeItem;
-        this.name = name;
-        this.size = size;
-        this.date = date;
-        this.time = time;
+        this.iconId = iconId;
+        this.permission = rawListingUtil.getPermission();
+        this.name = file.getName();
+        this.user = rawListingUtil.getUser();
+        this.group = rawListingUtil.getGroup();
+        this.size = rawListingUtil.getSize();
+        this.date = rawListingUtil.getDate();
+        this.time = rawListingUtil.getTime();
         this.absolutePath = absolutePath;
         this.typeId = typeId;
     }
@@ -71,8 +78,20 @@ public class Item {
         return iconId;
     }
 
+    public String getPermission() {
+        return permission;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public String getGroup() {
+        return group;
     }
 
     public String getDate() {
