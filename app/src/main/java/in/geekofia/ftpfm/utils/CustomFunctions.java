@@ -128,4 +128,23 @@ public class CustomFunctions {
         // show popup
         optionsMenu.show();
     }
+
+    private static void fileInfo(Context context, Item item){
+        String message = context.getResources().getString(R.string.alert_info_message, item.getPermission(), item.getUser(),
+                item.getGroup(), item.getSize(), item.getDate(), item.getTime(), item.getAbsolutePath(),
+                fetchString(context, item.getTypeId()));
+        AlertDialog.Builder newDialog = new AlertDialog.Builder(context);
+        newDialog.setTitle(item.getName());
+        newDialog.setIcon(item.getIconId());
+        newDialog.setMessage(message);
+
+        newDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        newDialog.show();
+    }
 }
