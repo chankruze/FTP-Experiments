@@ -105,7 +105,6 @@ public class FTPClientFunctions {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = fetchString(mContext, R.string.channel_name);
-            String description = fetchString(mContext, R.string.channel_description);
             int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel channel = new NotificationChannel(DOWNLOAD_CHANNEL_ID, name, importance);
             notificationManagerCompat.createNotificationChannel(channel);

@@ -1,6 +1,7 @@
 package in.geekofia.ftpfm.activities;
 
 import android.app.ListActivity;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -8,6 +9,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
@@ -162,7 +166,7 @@ public class FilesActivity extends ListActivity {
 
             adapter.notifyDataSetChanged();
         } else {
-            showFileOperations(this, ftpclient,v, item);
+            showFileOperations(FilesActivity.this, this, ftpclient,v, item);
         }
     }
 
@@ -176,4 +180,16 @@ public class FilesActivity extends ListActivity {
 //            finish();
 //        }
 //    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        int STORAGE_PERMISSION_CODE = 1;
+        if (requestCode == STORAGE_PERMISSION_CODE){
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                Toast.makeText(this, "Storage permission granted", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Can't download file: storage permission denied", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 }
