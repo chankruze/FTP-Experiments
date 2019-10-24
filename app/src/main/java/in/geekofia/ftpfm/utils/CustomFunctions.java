@@ -1,7 +1,6 @@
 package in.geekofia.ftpfm.utils;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
@@ -16,14 +15,15 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.view.menu.MenuPopupHelper;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
 
 import org.apache.commons.net.ftp.FTPClient;
 
 import java.io.IOException;
 
 import in.geekofia.ftpfm.R;
+import in.geekofia.ftpfm.activities.FilesActivity;
 import in.geekofia.ftpfm.models.Item;
 
 import static in.geekofia.ftpfm.utils.FTPClientFunctions.ftpFileDownload;
@@ -41,34 +41,32 @@ public class CustomFunctions {
     }
 
     // Toggle relative layout specific child properties
-    public static void toggleProp(View view, int prop, boolean value){
+    public static void toggleProp(View view, int prop, boolean value) {
 
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
 
-        if(value){
+        if (value) {
             layoutParams.addRule(prop);
-        }else {
+        } else {
             layoutParams.removeRule(prop);
         }
 
         view.setLayoutParams(layoutParams);
     }
 
-    private static void fileDownload(final Activity activity, final Context context, final FTPClient mFTPClient, final Item item){
+    private static void fileDownload(final FilesActivity activity, final Context context, final FTPClient mFTPClient, final Item item) {
         final int STORAGE_PERMISSION_CODE = 1;
         AlertDialog.Builder newDialog = new AlertDialog.Builder(context);
         newDialog.setTitle(fetchString(context, R.string.dl_confirm));
         newDialog.setMessage("Are you sure you want to download " + item.getName() + " ?");
 
-        newDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
+        newDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
                 //permission
-                if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
-
-                    Toast.makeText(context, "Storage permission check: OK", Toast.LENGTH_SHORT).show();
-
+                if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(context, "Downloading " + item.getName(), Toast.LENGTH_LONG).show();
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -79,13 +77,10 @@ public class CustomFunctions {
                             }
                         }
                     }).start();
-
-                    Toast.makeText(context, "Downloading " + item.getName(), Toast.LENGTH_LONG).show();
                 } else {
-                    requestStoragePermission(activity, context, STORAGE_PERMISSION_CODE);
+                    activity.requestStoragePermission();
                 }
             }
-
         });
 
         newDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -99,7 +94,7 @@ public class CustomFunctions {
         newDialog.show();
     }
 
-    public static void showFileOperations(final Activity activity, final Context context, final FTPClient mFTPClient, View view, final Item mItem) {
+    public static void showFileOperations(final FilesActivity activity, final Context context, final FTPClient mFTPClient, View view, final Item mItem) {
         // Setup Popup Menu
         MenuBuilder menuBuilder = new MenuBuilder(context);
         MenuInflater inflater = new MenuInflater(context);
@@ -142,7 +137,7 @@ public class CustomFunctions {
         optionsMenu.show();
     }
 
-    private static void fileInfo(Context context, Item item){
+    private static void fileInfo(Context context, Item item) {
         String message = context.getResources().getString(R.string.alert_info_message, item.getPermission(), item.getUser(),
                 item.getGroup(), item.getSize(), item.getDate(), item.getTime(), item.getAbsolutePath(),
                 fetchString(context, item.getTypeId()));
@@ -159,32 +154,5 @@ public class CustomFunctions {
             }
         });
         newDialog.show();
-    }
-
-    public static void requestStoragePermission(final Activity activity, Context context, final int STORAGE_PERMISSION_CODE) {
-
-        if (ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)){
-
-            new AlertDialog.Builder(context)
-                    .setTitle("Storage Permission Required")
-                    .setMessage("This permission is required to write & save the file to phone's storage")
-                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions(activity, new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
-                        }
-                    })
-                    .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .create()
-                    .show();
-
-        } else {
-            ActivityCompat.requestPermissions(activity, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
-        }
     }
 }

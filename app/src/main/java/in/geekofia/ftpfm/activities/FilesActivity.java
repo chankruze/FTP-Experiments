@@ -1,7 +1,7 @@
 package in.geekofia.ftpfm.activities;
 
+import android.Manifest;
 import android.app.ListActivity;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -9,9 +9,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
@@ -23,6 +25,7 @@ import in.geekofia.ftpfm.R;
 import in.geekofia.ftpfm.adapters.FileListAdapter;
 import in.geekofia.ftpfm.models.Item;
 import in.geekofia.ftpfm.utils.ListFTPFiles;
+import in.geekofia.ftpfm.utils.PermissionUtil;
 
 import static in.geekofia.ftpfm.utils.CustomFunctions.showFileOperations;
 import static in.geekofia.ftpfm.utils.FTPClientFunctions.ftpConnect;
@@ -39,6 +42,7 @@ public class FilesActivity extends ListActivity {
     private int port;
 
     // Views
+    private View mLayout;
     private ListView mListView;
     private TextView mErrorText;
     private ImageView mImageView;
@@ -47,6 +51,10 @@ public class FilesActivity extends ListActivity {
     private String TAG = getClass().getSimpleName();
 
     private FTPClient ftpclient;
+
+    private static final int STORAGE_REQUEST_CODE = 1;
+    private static String[] PERMISSIONS_STORAGE = {Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,6 +141,7 @@ public class FilesActivity extends ListActivity {
     }
 
     private void initViews() {
+        mLayout = findViewById(R.id.root_layout);
         mListView = findViewById(android.R.id.list);
 
         mErrorText = findViewById(R.id.error_text);
@@ -152,7 +161,7 @@ public class FilesActivity extends ListActivity {
         final Item item = (Item) adapter.getItem(position);
         int mItemType = item.getTypeItem();
 
-        if (mItemType == Item.DIRECTORY || mItemType == Item.UP){
+        if (mItemType == Item.DIRECTORY || mItemType == Item.UP) {
             ListFTPFiles listFTPFiles = new ListFTPFiles(ftpclient, item.getAbsolutePath(), directories);
             Thread thread = new Thread(listFTPFiles);
             thread.start();
@@ -166,7 +175,7 @@ public class FilesActivity extends ListActivity {
 
             adapter.notifyDataSetChanged();
         } else {
-            showFileOperations(FilesActivity.this, this, ftpclient,v, item);
+            showFileOperations(this, this, ftpclient, v, item);
         }
     }
 
@@ -180,16 +189,43 @@ public class FilesActivity extends ListActivity {
 //            finish();
 //        }
 //    }
+    public void requestStoragePermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                && ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+            // Display a SnackBar with an explanation and a button to trigger the request.
+            Snackbar.make(mLayout, R.string.permission_storage_rationale,
+                    Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.permission_storage_button, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            ActivityCompat
+                                    .requestPermissions(FilesActivity.this, PERMISSIONS_STORAGE,
+                                            STORAGE_REQUEST_CODE);
+                        }
+                    })
+                    .show();
+        } else {
+            ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE, STORAGE_REQUEST_CODE);
+        }
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        int STORAGE_PERMISSION_CODE = 1;
-        if (requestCode == STORAGE_PERMISSION_CODE){
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                Toast.makeText(this, "Storage permission granted", Toast.LENGTH_SHORT).show();
+        if (requestCode == STORAGE_REQUEST_CODE) {
+            if (PermissionUtil.verifyPermissions(grantResults)) {
+                Snackbar.make(mLayout, R.string.permission_storage_granted,
+                        Snackbar.LENGTH_SHORT)
+                        .show();
             } else {
-                Toast.makeText(this, "Can't download file: storage permission denied", Toast.LENGTH_SHORT).show();
+                Snackbar.make(mLayout, R.string.permission_storage_denied,
+                        Snackbar.LENGTH_SHORT)
+                        .show();
             }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 }
