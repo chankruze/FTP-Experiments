@@ -20,7 +20,7 @@ public class RawListingUtil {
     // Filtering List
     private List<String> filters = new ArrayList<>();
 
-    public RawListingUtil(FTPFile ftpFile){
+    public RawListingUtil(FTPFile ftpFile) {
         this.rawListing = ftpFile.getRawListing().split(" ");
         splitedRawList = new ArrayList<>(Arrays.asList(rawListing));
 

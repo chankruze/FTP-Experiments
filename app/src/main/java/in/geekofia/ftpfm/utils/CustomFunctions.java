@@ -155,4 +155,23 @@ public class CustomFunctions {
         });
         newDialog.show();
     }
+
+//    public static void FTPclose(FTPClient ftp) throws IOException{
+//        try {
+//            // checks if connected
+//            if (ftp.isConnected()) {
+//                // close FTP connection
+//                ftp.logout();
+//            }
+//        } finally {
+//            if (ftp.isConnected()) {
+//                try {
+//                    ftp.disconnect();
+//                } catch (IOException e) {
+//                    // ignore
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+//    }
 }

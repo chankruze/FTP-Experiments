@@ -31,7 +31,7 @@ public class ListFTPFiles implements Runnable {
 
             for (FTPFile mFile : mFiles) {
                 if (mFile.isDirectory()) {
-                    if (mPath == "/"){
+                    if (mPath == "/") {
                         Item mDir = new Item(Item.DIRECTORY, mFile.getName(), 0, mFile.getName() + "/");
                         newDirectories.add(mDir);
                     } else {
@@ -185,7 +185,7 @@ public class ListFTPFiles implements Runnable {
 
 //            System.out.println("## path " + mPath);
 
-            if (!mPath.isEmpty()){
+            if (!mPath.isEmpty()) {
                 String[] splitedPathString = mPath.split("/", 0);
                 List<String> splitedPath = new ArrayList<>(Arrays.asList(splitedPathString));
 

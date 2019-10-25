@@ -166,7 +166,6 @@ public class FilesActivity extends ListActivity {
         } else {
             showFileOperations(this, this, ftpclient, v, item);
         }
-
     }
 
     @Override
@@ -216,7 +215,7 @@ public class FilesActivity extends ListActivity {
         }
     }
 
-    private void listFiles(Item item){
+    private void listFiles(Item item) {
         ListFTPFiles listFTPFiles = new ListFTPFiles(ftpclient, item.getAbsolutePath(), directories);
         Thread thread = new Thread(listFTPFiles);
         thread.start();

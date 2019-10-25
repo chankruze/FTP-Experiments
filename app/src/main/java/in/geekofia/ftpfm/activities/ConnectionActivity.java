@@ -18,7 +18,7 @@ import in.geekofia.ftpfm.R;
 
 public class ConnectionActivity extends AppCompatActivity {
 
-//    private Spinner mProtocalSpinner;
+    // private Spinner mProtocalSpinner;
     private String host, username, password;
     private int port;
 
@@ -41,12 +41,11 @@ public class ConnectionActivity extends AppCompatActivity {
 
         ftpclient = new FTPClient();
 
-        mRadioConnectionTypeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
-        {
+        mRadioConnectionTypeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 // checkedId is the RadioButton selected
-                if (checkedId != R.id.connection_registered){
+                if (checkedId != R.id.connection_registered) {
                     mUsernameLayout.setVisibility(View.GONE);
                     mPasswordLayout.setVisibility(View.GONE);
                     mRadioRememberPasswordGroup.setVisibility(View.GONE);

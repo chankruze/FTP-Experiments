@@ -21,7 +21,7 @@ public class FileListAdapter extends BaseAdapter {
     private Item item;
     private LayoutInflater inflater;
 
-    public FileListAdapter(Context context, List<Item> list){
+    public FileListAdapter(Context context, List<Item> list) {
         mContext = context;
         listItem = list;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -48,7 +48,7 @@ public class FileListAdapter extends BaseAdapter {
 
         item = listItem.get(position);
 
-        if(view == null){
+        if (view == null) {
             CacheView cache = new CacheView();
             view = inflater.inflate(R.layout.file_item, null);
             cache.name = view.findViewById(R.id.file_name);
@@ -67,15 +67,14 @@ public class FileListAdapter extends BaseAdapter {
 
         String mDetails = mContext.getResources().getString(R.string.fs_unit_bytes, item.getSize());
 
-        switch(item.getTypeItem()){
+        switch (item.getTypeItem()) {
             case Item.DIRECTORY:
                 cache.name.setText(item.getName());
                 toggleProp(cache.name, RelativeLayout.CENTER_VERTICAL, true);
                 cache.details.setVisibility(View.GONE);
-                if(item.getNumItems() > 0){
+                if (item.getNumItems() > 0) {
                     cache.icon.setImageDrawable(fetchDrawable(mContext, item.getIconId()));
-                }
-                else{
+                } else {
                     cache.icon.setImageDrawable(fetchDrawable(mContext, R.drawable.ic_folder));
                 }
                 break;

@@ -5,7 +5,7 @@ import org.apache.commons.net.ftp.FTPClient;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class MyInputStream implements Runnable{
+public class MyInputStream implements Runnable {
     InputStream inputStream = null;
     FTPClient mFTPClient;
     String mFilePath;

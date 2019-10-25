@@ -91,9 +91,7 @@ public class FTPClientFunctions {
     }
 
     /**
-     *
      * FTP FILE DOWNLOAD
-     *
      */
     public static void ftpFileDownload(final FTPClient mFTPClient, Context mContext, final String mRemoteFilePath, String mRemoteFileName, String localFilePath, String localFileName, long mFileSize) throws IOException {
         String mLocalFilePath, mLocalFileName;
@@ -113,12 +111,12 @@ public class FTPClientFunctions {
         final int progressMax = 100;
         double currentProgress = 0;
         long downloadedFileSize = 0;
-        int DOWNLOAD_NOTIFICATION_ID = (int)(Math.random() * 100);
+        int DOWNLOAD_NOTIFICATION_ID = (int) (Math.random() * 100);
 
-        if (localFilePath == "" || localFilePath == null){
+        if (localFilePath == "" || localFilePath == null) {
             String FTP_FOLDER = "FTP";
             File FTP_folder = new File(Environment.getExternalStorageDirectory(), FTP_FOLDER);
-            if (!FTP_folder.exists()){
+            if (!FTP_folder.exists()) {
                 FTP_folder.mkdirs();
             }
             mLocalFilePath = FTP_folder.toString();
@@ -127,7 +125,7 @@ public class FTPClientFunctions {
             mLocalFilePath = localFilePath;
         }
 
-        if (localFileName == "" || localFileName == null){
+        if (localFileName == "" || localFileName == null) {
             mLocalFileName = mRemoteFileName;
         } else {
             mLocalFileName = localFileName;
@@ -173,7 +171,7 @@ public class FTPClientFunctions {
                 outputStream.write(bytesArray, 0, bytesRead);
                 downloadedFileSize += bytesRead;
                 currentProgress = Double.parseDouble((new DecimalFormat("##.##").format(100.0 * downloadedFileSize / mFileSize)));
-                notification.setProgress(progressMax, (int)currentProgress, false)
+                notification.setProgress(progressMax, (int) currentProgress, false)
                         .setContentText(currentProgress + " %");
                 notificationManagerCompat.notify(DOWNLOAD_NOTIFICATION_ID, notification.build());
             }
