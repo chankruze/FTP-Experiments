@@ -2,6 +2,7 @@ package in.geekofia.ftpfm.utils;
 
 import org.apache.commons.net.ftp.FTPFile;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,8 +15,8 @@ public class RawListingUtil {
     private List<String> splitedRawList;
 
     // Variables to save item props
-    private String permission, user, group, date, time;
-    private long size;
+    private String permission, user, group, date, time, unit;
+    private double size;
 
     // Filtering List
     private List<String> filters = new ArrayList<>();
@@ -30,7 +31,7 @@ public class RawListingUtil {
         this.permission = splitedRawList.get(0).substring(1);
         this.user = splitedRawList.get(2);
         this.group = splitedRawList.get(3);
-        this.size = Long.parseLong(splitedRawList.get(4));
+        prettyfiySize(Long.parseLong(splitedRawList.get(4)));
         this.date = splitedRawList.get(6) + " " + splitedRawList.get(5);
         this.time = splitedRawList.get(7);
     }
@@ -47,9 +48,11 @@ public class RawListingUtil {
         return group;
     }
 
-    public long getSize() {
+    public double getSize() {
         return size;
     }
+
+    public String getUnit() { return unit; }
 
     public String getDate() {
         return date;
@@ -57,5 +60,20 @@ public class RawListingUtil {
 
     public String getTime() {
         return time;
+    }
+
+    private void prettyfiySize(long size){
+        String[] unitArray = {"KB", "MB", "GB", "TB"};
+        double size_d = size;
+        int unitIndex = 0;
+        String unit = "";
+        while (size_d >= 1024){
+            size_d /= 1024.0;
+            unit = unitArray[unitIndex];
+            unitIndex++;
+        }
+
+        this.size = Double.parseDouble(new DecimalFormat("##.##").format(size_d));
+        this.unit = unit;
     }
 }

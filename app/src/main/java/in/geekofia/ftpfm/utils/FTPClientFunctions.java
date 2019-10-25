@@ -120,7 +120,7 @@ public class FTPClientFunctions {
                 FTP_folder.mkdirs();
             }
             mLocalFilePath = FTP_folder.toString();
-            System.out.println("## Local File Path" + mLocalFilePath);
+//            System.out.println("## Local File Path" + mLocalFilePath);
         } else {
             mLocalFilePath = localFilePath;
         }
@@ -181,7 +181,6 @@ public class FTPClientFunctions {
 
         if (success) {
             notification.setContentText("Download finished")
-                    .setProgress(0, 0, false)
                     .setOngoing(false);
             notificationManagerCompat.notify(DOWNLOAD_NOTIFICATION_ID, notification.build());
             System.out.println(mRemoteFileName + " has been downloaded successfully.");

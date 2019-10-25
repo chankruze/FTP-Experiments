@@ -65,8 +65,6 @@ public class FileListAdapter extends BaseAdapter {
         //Retrive the items from cache
         CacheView cache = (CacheView) view.getTag();
 
-        String mDetails = mContext.getResources().getString(R.string.fs_unit_bytes, item.getSize());
-
         switch (item.getTypeItem()) {
             case Item.DIRECTORY:
                 cache.name.setText(item.getName());
@@ -82,7 +80,7 @@ public class FileListAdapter extends BaseAdapter {
                 cache.name.setText(item.getName());
                 toggleProp(cache.name, RelativeLayout.CENTER_VERTICAL, false);
                 cache.details.setVisibility(View.VISIBLE);
-                cache.size.setText(mDetails);
+                cache.size.setText(mContext.getResources().getString(R.string.fs_unit_bytes, item.getSize(), item.getUnit()));
                 cache.date.setText(item.getDate());
                 cache.time.setText(item.getTime());
                 cache.icon.setImageDrawable(fetchDrawable(mContext, item.getIconId()));

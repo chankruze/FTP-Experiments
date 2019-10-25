@@ -75,7 +75,7 @@ public class CustomFunctions {
                             try {
                                 FTPClient mFTPClient = new FTPClient();
                                 ftpConnect(mFTPClient, ftpConf.getHost(), ftpConf.getUser(), ftpConf.getPass(), ftpConf.getPort());
-                                ftpFileDownload(mFTPClient, context, item.getAbsolutePath(), item.getName(), null, null, item.getSize());
+                                ftpFileDownload(mFTPClient, context, item.getAbsolutePath(), item.getName(), null, null, item.getSizeInBytes());
                                 ftpDisconnect(mFTPClient);
                             } catch (IOException e) {
                                 e.printStackTrace();

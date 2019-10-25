@@ -12,8 +12,9 @@ public class Item {
     public static final int UP = 3;
 
     private int typeItem, numItems, iconId, typeId;
-    private String permission, name, user, group, date, time, absolutePath;
-    private long size;
+    private String permission, name, user, group, date, time, absolutePath, unit;
+    private double size;
+    private long sizeInBytes;
 
     // Constructors //
 
@@ -35,7 +36,9 @@ public class Item {
         this.name = file.getName();
         this.user = rawListingUtil.getUser();
         this.group = rawListingUtil.getGroup();
+        this.sizeInBytes = file.getSize();
         this.size = rawListingUtil.getSize();
+        this.unit = rawListingUtil.getUnit();
         this.date = rawListingUtil.getDate();
         this.time = rawListingUtil.getTime();
         this.absolutePath = absolutePath;
@@ -79,9 +82,15 @@ public class Item {
         return time;
     }
 
-    public long getSize() {
+    public long getSizeInBytes() {
+        return sizeInBytes;
+    }
+
+    public double getSize() {
         return size;
     }
+
+    public String getUnit () { return unit; }
 
     public String getAbsolutePath() {
         return absolutePath;
