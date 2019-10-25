@@ -162,33 +162,20 @@ public class FilesActivity extends ListActivity {
         int mItemType = item.getTypeItem();
 
         if (mItemType == Item.DIRECTORY || mItemType == Item.UP) {
-            ListFTPFiles listFTPFiles = new ListFTPFiles(ftpclient, item.getAbsolutePath(), directories);
-            Thread thread = new Thread(listFTPFiles);
-            thread.start();
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            directories = listFTPFiles.getNewDirectories();
-
-            adapter.notifyDataSetChanged();
+            listFiles(item);
         } else {
             showFileOperations(this, this, ftpclient, v, item);
         }
+
     }
 
-    //    @Override
-//    public void onBackPressed() {
-//        if(!currentDir.getName().equals(rootDirPath)){
-//            fillDirectory(currentDir.getParentFile());
-//            currentDir = currentDir.getParentFile();
-//        }
-//        else{
-//            finish();
-//        }
-//    }
+    @Override
+    public void onBackPressed() {
+        if (directories.get(0).getTypeItem() == Item.UP) {
+            listFiles(directories.get(0));
+        }
+    }
+
     public void requestStoragePermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -227,5 +214,20 @@ public class FilesActivity extends ListActivity {
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+    }
+
+    private void listFiles(Item item){
+        ListFTPFiles listFTPFiles = new ListFTPFiles(ftpclient, item.getAbsolutePath(), directories);
+        Thread thread = new Thread(listFTPFiles);
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        directories = listFTPFiles.getNewDirectories();
+
+        adapter.notifyDataSetChanged();
     }
 }
