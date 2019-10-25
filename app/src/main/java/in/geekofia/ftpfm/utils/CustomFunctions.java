@@ -24,9 +24,12 @@ import java.io.IOException;
 
 import in.geekofia.ftpfm.R;
 import in.geekofia.ftpfm.activities.FilesActivity;
+import in.geekofia.ftpfm.models.FTPConf;
 import in.geekofia.ftpfm.models.Item;
 
+import static in.geekofia.ftpfm.utils.FTPClientFunctions.ftpDisconnect;
 import static in.geekofia.ftpfm.utils.FTPClientFunctions.ftpFileDownload;
+import static in.geekofia.ftpfm.utils.FTPClientFunctions.ftpConnect;
 
 public class CustomFunctions {
 
@@ -54,8 +57,7 @@ public class CustomFunctions {
         view.setLayoutParams(layoutParams);
     }
 
-    private static void fileDownload(final FilesActivity activity, final Context context, final FTPClient mFTPClient, final Item item) {
-        final int STORAGE_PERMISSION_CODE = 1;
+    private static void fileDownload(final FilesActivity activity, final Context context, final FTPConf ftpConf, final Item item) {
         AlertDialog.Builder newDialog = new AlertDialog.Builder(context);
         newDialog.setTitle(fetchString(context, R.string.dl_confirm));
         newDialog.setMessage("Are you sure you want to download " + item.getName() + " ?");
@@ -71,7 +73,10 @@ public class CustomFunctions {
                         @Override
                         public void run() {
                             try {
+                                FTPClient mFTPClient = new FTPClient();
+                                ftpConnect(mFTPClient, ftpConf.getHost(), ftpConf.getUser(), ftpConf.getPass(), ftpConf.getPort());
                                 ftpFileDownload(mFTPClient, context, item.getAbsolutePath(), item.getName(), null, null, item.getSize());
+                                ftpDisconnect(mFTPClient);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -94,7 +99,7 @@ public class CustomFunctions {
         newDialog.show();
     }
 
-    public static void showFileOperations(final FilesActivity activity, final Context context, final FTPClient mFTPClient, View view, final Item mItem) {
+    public static void showFileOperations(final FilesActivity activity, final Context context, final FTPClient mFTPClient, View view, final Item mItem, final FTPConf ftpConf) {
         // Setup Popup Menu
         MenuBuilder menuBuilder = new MenuBuilder(context);
         MenuInflater inflater = new MenuInflater(context);
@@ -112,7 +117,7 @@ public class CustomFunctions {
                         fileInfo(context, mItem);
                         return true;
                     case R.id.option_download:
-                        fileDownload(activity, context, mFTPClient, mItem);
+                        fileDownload(activity, context, ftpConf, mItem);
                         return true;
                     case R.id.option_rename:
 //                        fileRename(context, mItem);

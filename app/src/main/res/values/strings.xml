@@ -13,7 +13,7 @@
 
     <string name="btn_connect">Connect</string>
 
-    <string name="fs_unit_bytes">%1$d bytes</string>
+    <string name="fs_unit_bytes">%1$.02f %2$s</string>
 
     <!-- Helper text-->
     <string name="helper_host">Enter server address</string>
