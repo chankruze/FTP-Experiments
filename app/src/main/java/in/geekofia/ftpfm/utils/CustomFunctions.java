@@ -144,7 +144,7 @@ public class CustomFunctions {
 
     private static void fileInfo(Context context, Item item) {
         String message = context.getResources().getString(R.string.alert_info_message, item.getPermission(), item.getUser(),
-                item.getGroup(), item.getSize(), item.getDate(), item.getTime(), item.getAbsolutePath(),
+                item.getGroup(), item.getSize(), item.getUnit(), item.getDate(), item.getTime(), item.getAbsolutePath(),
                 fetchString(context, item.getTypeId()));
         AlertDialog.Builder newDialog = new AlertDialog.Builder(context);
         newDialog.setTitle(item.getName());

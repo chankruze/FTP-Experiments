@@ -61,7 +61,7 @@
     <string name="channel_name">FTP File Manager Download</string>
     <string name="channel_description">Shows download notification</string>
 
-    <string name="alert_info_message">Permissions: %1$s\nOwner: %2$s\nGroup: %3$s\nSize: %4$d bytes\nDate: %5$s\nTime: %6$s\nPath: %7$s\nType: %8$s</string>
+    <string name="alert_info_message">Permissions: %1$s\nOwner: %2$s\nGroup: %3$s\nSize: %4$.02f %5$s\nDate: %6$s\nTime: %7$s\nPath: %8$s\nType: %9$s</string>
 
     <string name="permission_storage_rationale">Storage permissions are needed to download and save a file.</string>
     <string name="permission_storage_button">Ok</string>
