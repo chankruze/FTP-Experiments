@@ -1,13 +1,16 @@
 package in.geekofia.ftpfm.models;
 
 public class FTPConf {
-    String host, user, pass;
+    String name, host, user, pass;
     int port;
 
-    public FTPConf() {
-    }
+    public FTPConf(String name, String host, int port, String user, String pass) {
+        if (!name.isEmpty()){
+            this.name = name;
+        } else {
+            this.name = "New Connection " + Math.random() * 500;
+        }
 
-    public FTPConf(String host, int port, String user, String pass) {
         this.host = host;
         this.port = port;
         this.user = user;

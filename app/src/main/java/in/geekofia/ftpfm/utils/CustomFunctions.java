@@ -103,7 +103,7 @@ public class CustomFunctions {
         // Setup Popup Menu
         MenuBuilder menuBuilder = new MenuBuilder(context);
         MenuInflater inflater = new MenuInflater(context);
-        inflater.inflate(R.menu.menu_file_operations, menuBuilder);
+        inflater.inflate(R.menu.menu_frag_file_operations, menuBuilder);
         MenuPopupHelper optionsMenu = new MenuPopupHelper(context, menuBuilder, view);
         optionsMenu.setForceShowIcon(true);
         optionsMenu.setGravity(Gravity.END);

@@ -16,6 +16,8 @@ import org.apache.commons.net.ftp.FTPClient;
 
 import in.geekofia.ftpfm.R;
 
+// TODO: change this to EditConnection fragment
+
 public class ConnectionActivity extends AppCompatActivity {
 
     // private Spinner mProtocalSpinner;
@@ -23,6 +25,7 @@ public class ConnectionActivity extends AppCompatActivity {
     private int port;
 
     // Views
+    // TODO: Replace with a save button in title bar
     private Button mButtonConnect;
     private TextInputLayout mHostLayout, mPortLayout, mUsernameLayout, mPasswordLayout;
     private TextInputEditText mHost, mPort, mUsername, mPassword;
@@ -66,6 +69,8 @@ public class ConnectionActivity extends AppCompatActivity {
                 port = Integer.parseInt(mPort.getText().toString());
                 username = mUsername.getText().toString();
                 password = mPassword.getText().toString();
+
+                // TODO: Push these data to database
 
                 Intent intent = new Intent(getApplicationContext(), FilesActivity.class);
                 intent.putExtra("host", host);

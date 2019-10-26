@@ -3,7 +3,7 @@
     <item
         android:id="@+id/option_info"
         android:icon="@drawable/ic_info"
-        android:title="@string/option_info"/>
+        android:title="@string/toolbar_info"/>
 
     <item
         android:id="@+id/option_rename"

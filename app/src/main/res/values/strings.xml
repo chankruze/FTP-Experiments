@@ -16,6 +16,8 @@
     <string name="fs_unit_bytes">%1$.02f %2$s</string>
 
     <!-- Helper text-->
+    <string name="helper_name">Any name to recognize later</string>
+    <string name="hint_name">Connection Name</string>
     <string name="helper_host">Enter server address</string>
     <string name="hint_host">Host</string>
     <string name="helper_port">Default is 21</string>
@@ -53,7 +55,6 @@
 
     <string name="dl_confirm">Download confirmation</string>
 
-    <string name="option_info">Info</string>
     <string name="option_rename">Rename</string>
     <string name="option_delete">Delete</string>
     <string name="option_download">Download</string>
@@ -67,4 +68,12 @@
     <string name="permission_storage_button">Ok</string>
     <string name="permission_storage_granted">Storage permissions granted</string>
     <string name="permission_storage_denied">Can\'t download file: storage permission denied</string>
+
+    <string name="btn_desc_info">Info</string>
+    <string name="main_option_connection_title">Connections</string>
+    <string name="main_option_connection_desc">Manage your connections</string>
+
+    <string name="toolbar_info">Info</string>
+    <string name="toolbar_close">Close</string>
+    <string name="toolbar_save">Save</string>
 </resources>

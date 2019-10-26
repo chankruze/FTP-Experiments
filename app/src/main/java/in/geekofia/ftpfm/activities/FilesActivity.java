@@ -86,7 +86,7 @@ public class FilesActivity extends ListActivity {
                 status = ftpConnect(ftpclient, host, username, password, port);
                 if (status == true) {
                     Log.d(TAG, "Connection Success");
-                    ftpConf = new FTPConf(host, port, username, password);
+                    ftpConf = new FTPConf(null, host, port, username, password);
 
                     runOnUiThread(new Runnable() {
                         @Override
