@@ -24,12 +24,7 @@ public class Profile implements Serializable {
     private String pass;
 
     public Profile(String name, String host, int port, String user, String pass) {
-        if (!name.isEmpty()){
-            this.name = name;
-        } else {
-            this.name = "New Connection " + Math.random() * 500;
-        }
-
+        this.name = name;
         this.host = host;
         this.port = port;
         this.user = user;

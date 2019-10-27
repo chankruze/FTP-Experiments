@@ -30,14 +30,11 @@ import in.geekofia.ftpfm.adapters.ProfileAdapter;
 import in.geekofia.ftpfm.models.Profile;
 
 import static in.geekofia.ftpfm.activities.MainActivity.ADD_EDIT_CONNECTION_FRAGMENT;
-import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_HOST;
-import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_ID;
-import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_NAME;
-import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_PASSWORD;
-import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_PORT;
+import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_OPERATION_CODE;
+import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_PROFILE;
 import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_TITLE;
-import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_USER_NAME;
 import static in.geekofia.ftpfm.activities.MainActivity.HOME_FRAGMENT;
+import static in.geekofia.ftpfm.activities.MainActivity.OPERATION_CODE_UPDATE;
 
 public class ConnectionsFragment extends Fragment {
 
@@ -59,21 +56,15 @@ public class ConnectionsFragment extends Fragment {
         loadConnectionProfiles();
 
         Bundle bundle = this.getArguments();
-        if (bundle != null) {
-            int id = bundle.getInt(EXTRA_ID, -1);
-            String name = bundle.getString(EXTRA_NAME);
-            String host = bundle.getString(EXTRA_HOST);
-            int port = bundle.getInt(EXTRA_PORT);
-            String userName = bundle.getString(EXTRA_USER_NAME);
-            String password = bundle.getString(EXTRA_PASSWORD);
 
-            if (id == -1){
-                Profile newProfile = new Profile(name, host, port, userName, password);
-                profileViewModel.insert(newProfile);
-            } else {
-                Profile newProfile = new Profile(name, host, port, userName, password);
-                newProfile.setId(id);
+        if (bundle != null) {
+            Profile newProfile = ((Profile) bundle.getSerializable(EXTRA_PROFILE));
+            int operationCode = bundle.getInt(EXTRA_OPERATION_CODE);
+
+            if (operationCode == OPERATION_CODE_UPDATE){
                 profileViewModel.update(newProfile);
+            } else {
+                profileViewModel.insert(newProfile);
             }
         }
 
@@ -149,13 +140,7 @@ public class ConnectionsFragment extends Fragment {
                 AddEditConnectionFragment addEditConnectionFragment = new AddEditConnectionFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString(EXTRA_TITLE, "Edit " + profile.getName());
-                bundle.putInt(EXTRA_ID, profile.getId());
-                bundle.putString(EXTRA_NAME, profile.getName());
-                bundle.putString(EXTRA_HOST, profile.getHost());
-                bundle.putInt(EXTRA_PORT, profile.getPort());
-                bundle.putString(EXTRA_USER_NAME, profile.getUser());
-                bundle.putString(EXTRA_PASSWORD, profile.getPass());
-                addEditConnectionFragment.setArguments(bundle);
+                bundle.putSerializable(EXTRA_PROFILE, profile);
                 addEditConnectionFragment.setArguments(bundle);
                 if (getActivity().getSupportFragmentManager() != null) {
                     getActivity().getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);

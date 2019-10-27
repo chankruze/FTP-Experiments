@@ -21,14 +21,13 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import in.geekofia.ftpfm.R;
+import in.geekofia.ftpfm.models.Profile;
 
-import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_HOST;
-import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_ID;
-import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_NAME;
-import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_PASSWORD;
-import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_PORT;
+import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_OPERATION_CODE;
+import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_PROFILE;
 import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_TITLE;
-import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_USER_NAME;
+import static in.geekofia.ftpfm.activities.MainActivity.OPERATION_CODE_INSERT;
+import static in.geekofia.ftpfm.activities.MainActivity.OPERATION_CODE_UPDATE;
 
 public class AddEditConnectionFragment extends Fragment {
 
@@ -38,6 +37,8 @@ public class AddEditConnectionFragment extends Fragment {
     private RadioGroup mRadioConnectionTypeGroup;
     private Bundle mBundle;
     private int id;
+
+    public static int OPERATION_CODE;
 
     @Nullable
     @Override
@@ -51,20 +52,21 @@ public class AddEditConnectionFragment extends Fragment {
         mBundle = this.getArguments();
         if (mBundle != null) {
             getActivity().setTitle(mBundle.getString(EXTRA_TITLE));
-            id = mBundle.getInt(EXTRA_ID);
-            mName.setText(mBundle.getString(EXTRA_NAME));
-            mHost.setText(mBundle.getString(EXTRA_HOST));
-            mPort.setText(String.valueOf(mBundle.getInt(EXTRA_PORT)));
+            Profile editProfile = ((Profile) mBundle.getSerializable(EXTRA_PROFILE));
+            this.id = editProfile.getId();
+            mName.setText(editProfile.getName());
+            mHost.setText(editProfile.getHost());
+            mPort.setText(String.valueOf(editProfile.getPort()));
 
-            if (mBundle.getString(EXTRA_USER_NAME).isEmpty() && mBundle.getString(EXTRA_PASSWORD).isEmpty()){
+            if (editProfile.getUser().isEmpty() && editProfile.getPass().isEmpty()){
                 mRadioConnectionTypeGroup.check(R.id.connection_anonymous);
             } else {
-                mUsername.setText(mBundle.getString(EXTRA_USER_NAME));
-                mPassword.setText(mBundle.getString(EXTRA_PASSWORD));
+                mUsername.setText(editProfile.getUser());
+                mPassword.setText(editProfile.getPass());
             }
         } else {
             getActivity().setTitle("New Connection");
-            id = -1;
+            this.id = -1;
         }
 
         return view;
@@ -137,22 +139,21 @@ public class AddEditConnectionFragment extends Fragment {
         if (!(mPort.getText().toString().trim().isEmpty()))
             port = Integer.parseInt(mPort.getText().toString());
 
-        // TODO: A new viewmodel
-        // Profile newProfile = new Profile(name, host, port, userName, password);
+        Profile newProfile = new Profile(name, host, port, userName, password);
+
+        System.out.println("## Add/Edit Connections Frag ID:- " + id);
+
+        if (this.id != -1 ){
+            newProfile.setId(this.id);
+            OPERATION_CODE = OPERATION_CODE_UPDATE;
+        } else {
+            OPERATION_CODE = OPERATION_CODE_INSERT;
+        }
 
         ConnectionsFragment connectionsFragment = new ConnectionsFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(EXTRA_NAME, name);
-        bundle.putString(EXTRA_HOST, host);
-        bundle.putInt(EXTRA_PORT, port);
-        bundle.putString(EXTRA_USER_NAME, userName);
-        bundle.putString(EXTRA_PASSWORD, password);
-
-        // bundle presents if id != -1. Which means it is updating. So id is required.
-        if (id != -1 ){
-            bundle.putInt(EXTRA_ID, id);
-        }
-
+        bundle.putSerializable(EXTRA_PROFILE, newProfile);
+        bundle.putInt(EXTRA_OPERATION_CODE, OPERATION_CODE);
         connectionsFragment.setArguments(bundle);
         if (getActivity().getSupportFragmentManager() != null) {
             getActivity().getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
