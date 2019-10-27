@@ -36,7 +36,7 @@
             app:helperText="@string/helper_host">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/id_host"
+                android:id="@+id/id_edit_host"
                 style="@style/InputEditText"
                 android:digits="._-0123456789qwertzuiopasdfghjklyxcvbnm"/>
         </com.google.android.material.textfield.TextInputLayout>
@@ -50,7 +50,7 @@
             app:helperText="@string/helper_port">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/id_port"
+                android:id="@+id/id_edit_port"
                 style="@style/InputEditText"
                 android:maxLength="5" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -120,7 +120,7 @@
                 android:hint="@string/hint_username">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/id_username"
+                    android:id="@+id/id_edit_username"
                     style="@style/InputEditText" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -131,7 +131,7 @@
                 android:hint="@string/hint_password">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/id_password"
+                    android:id="@+id/id_edit_password"
                     style="@style/InputEditText"
                     android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>

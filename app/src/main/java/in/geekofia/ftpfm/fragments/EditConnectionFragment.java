@@ -21,12 +21,13 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import in.geekofia.ftpfm.R;
+import in.geekofia.ftpfm.models.Profile;
 
 public class EditConnectionFragment extends Fragment {
 
     private Toolbar mToolBar;
     private TextInputLayout mHostLayout, mPortLayout, mUsernameLayout, mPasswordLayout;
-    private TextInputEditText mHost, mPort, mUsername, mPassword;
+    private TextInputEditText mName, mHost, mPort, mUsername, mPassword;
     private RadioGroup mRadioConnectionTypeGroup;
 
     @Nullable
@@ -69,11 +70,11 @@ public class EditConnectionFragment extends Fragment {
         mPasswordLayout = view.getRootView().findViewById(R.id.password_layout);
         mRadioConnectionTypeGroup = view.getRootView().findViewById(R.id.radio_connection_type);
 
-
-        mHost = view.getRootView().findViewById(R.id.id_host);
-        mPort = view.getRootView().findViewById(R.id.id_port);
-        mUsername = view.getRootView().findViewById(R.id.id_username);
-        mPassword = view.getRootView().findViewById(R.id.id_password);
+        mName = view.getRootView().findViewById(R.id.id_edit_name);
+        mHost = view.getRootView().findViewById(R.id.id_edit_host);
+        mPort = view.getRootView().findViewById(R.id.id_edit_port);
+        mUsername = view.getRootView().findViewById(R.id.id_edit_username);
+        mPassword = view.getRootView().findViewById(R.id.id_edit_password);
 
         mPort.setInputType(InputType.TYPE_CLASS_NUMBER);
         mUsername.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -95,6 +96,43 @@ public class EditConnectionFragment extends Fragment {
         });
     }
 
+
+    private void saveProfile() {
+        String name = mName.getText().toString();
+        String host = mHost.getText().toString();
+        int port = 21;
+        String userName = mUsername.getText().toString();
+        String password = mPassword.getText().toString();
+
+        if (name.trim().isEmpty())
+            name = "New Connection " + (int)(Math.random() * 999.0);
+
+        if (host.trim().isEmpty()) {
+            Toast.makeText(getContext(), "Host address can't be empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!(mPort.getText().toString().trim().isEmpty()))
+            port = Integer.parseInt(mPort.getText().toString());
+
+        // TODO: A new viewmodel
+        // Profile newProfile = new Profile(name, host, port, userName, password);
+
+        ConnectionsFragment connectionsFragment = new ConnectionsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("NAME", name);
+        bundle.putString("HOST", host);
+        bundle.putInt("PORT", port);
+        bundle.putString("USERNAME", userName);
+        bundle.putString("PASS", password);
+        connectionsFragment.setArguments(bundle);
+        if (getActivity().getSupportFragmentManager() != null) {
+            getActivity().getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, connectionsFragment, "CONNECTION_FRAGMENT").commit();
+        }
+
+    }
+
 //    @Override
 //    public void onPrepareOptionsMenu(Menu menu) {
 //        MenuItem item = menu.findItem(R.id.toolbar_info);
@@ -112,7 +150,7 @@ public class EditConnectionFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.toolbar_save:
-                Toast.makeText(getContext(), "Saving ....", Toast.LENGTH_SHORT).show();
+                saveProfile();
                 return true;
             default:
                 return false;

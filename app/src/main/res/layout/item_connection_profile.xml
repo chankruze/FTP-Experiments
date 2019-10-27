@@ -8,16 +8,18 @@
         <LinearLayout style="@style/CardMainOptionInnerLinearLayout">
 
             <TextView
+                android:id="@+id/profile_name"
                 style="@style/CardMainOptionTitle"
                 android:text="@string/main_option_connection_title" />
 
             <TextView
+                android:id="@+id/profile_desc"
                 style="@style/CardMainOptionDescription"
                 android:text="@string/main_option_connection_desc" />
         </LinearLayout>
 
         <TextView
-            android:id="@+id/connection_option"
+            android:id="@+id/profile_option"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawableStart="@drawable/ic_more_vertical" />

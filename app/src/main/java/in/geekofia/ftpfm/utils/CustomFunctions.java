@@ -24,7 +24,7 @@ import java.io.IOException;
 
 import in.geekofia.ftpfm.R;
 import in.geekofia.ftpfm.activities.FilesActivity;
-import in.geekofia.ftpfm.models.FTPConf;
+import in.geekofia.ftpfm.models.Profile;
 import in.geekofia.ftpfm.models.Item;
 
 import static in.geekofia.ftpfm.utils.FTPClientFunctions.ftpDisconnect;
@@ -57,7 +57,7 @@ public class CustomFunctions {
         view.setLayoutParams(layoutParams);
     }
 
-    private static void fileDownload(final FilesActivity activity, final Context context, final FTPConf ftpConf, final Item item) {
+    private static void fileDownload(final FilesActivity activity, final Context context, final Profile ftpConf, final Item item) {
         AlertDialog.Builder newDialog = new AlertDialog.Builder(context);
         newDialog.setTitle(fetchString(context, R.string.dl_confirm));
         newDialog.setMessage("Are you sure you want to download " + item.getName() + " ?");
@@ -99,7 +99,7 @@ public class CustomFunctions {
         newDialog.show();
     }
 
-    public static void showFileOperations(final FilesActivity activity, final Context context, final FTPClient mFTPClient, View view, final Item mItem, final FTPConf ftpConf) {
+    public static void showFileOperations(final FilesActivity activity, final Context context, final FTPClient mFTPClient, View view, final Item mItem, final Profile ftpConf) {
         // Setup Popup Menu
         MenuBuilder menuBuilder = new MenuBuilder(context);
         MenuInflater inflater = new MenuInflater(context);

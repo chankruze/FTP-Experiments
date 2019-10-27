@@ -2,9 +2,6 @@ package in.geekofia.ftpfm.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -15,33 +12,53 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import in.geekofia.ftpfm.ProfileViewModel;
 import in.geekofia.ftpfm.R;
+import in.geekofia.ftpfm.adapters.ProfileAdapter;
+import in.geekofia.ftpfm.models.Profile;
 
 public class ConnectionsFragment extends Fragment {
 
     private Toolbar mToolBar;
     private RecyclerView mRecyclerView;
+    ProfileAdapter profileAdapter = new ProfileAdapter();
     private FloatingActionButton floatingActionButton;
+    private ProfileViewModel profileViewModel;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_connections, container, false);
 
-
         getActivity().setTitle("Manage Connections");
 //        setHasOptionsMenu(true);
         initViews(view);
         loadConnectionProfiles();
+
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            Profile newProfile = new Profile(bundle.getString("NAME"),
+                    bundle.getString("HOST"),
+                    bundle.getInt("PORT"),
+                    bundle.getString("USERNAME"),
+                    bundle.getString("PASS"));
+
+            profileViewModel.insert(newProfile);
+        } else {
+            //
+        }
 
         return view;
     }
@@ -67,7 +84,8 @@ public class ConnectionsFragment extends Fragment {
         mRecyclerView = view.getRootView().findViewById(R.id.recycler_view_connections);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
+
+        mRecyclerView.setAdapter(profileAdapter);
 
         // Initialize Floating Action Button
         floatingActionButton = view.getRootView().findViewById(R.id.floating_action_button);
@@ -84,7 +102,28 @@ public class ConnectionsFragment extends Fragment {
     }
 
     private void loadConnectionProfiles() {
-        // TODO : Feed data to recycler view to create a list of connections
+        profileViewModel = ViewModelProviders.of(getActivity()).get(ProfileViewModel.class);
+        profileViewModel.getAllProfiles().observe(this, new Observer<List<Profile>>() {
+            @Override
+            public void onChanged(List<Profile> profiles) {
+//                Toast.makeText(getContext(), "ON CHANGE CALLED", Toast.LENGTH_SHORT).show();
+                profileAdapter.setProfiles(profiles);
+            }
+        });
+
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                profileViewModel.delete(profileAdapter.getProfileAt(viewHolder.getAdapterPosition()));
+                Toast.makeText(getContext(), "Profile deleted", Toast.LENGTH_SHORT).show();
+            }
+        }).attachToRecyclerView(mRecyclerView);
     }
 
 //    @Override

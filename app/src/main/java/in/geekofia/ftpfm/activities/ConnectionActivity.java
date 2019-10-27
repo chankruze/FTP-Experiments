@@ -20,7 +20,7 @@ import in.geekofia.ftpfm.R;
 
 public class ConnectionActivity extends AppCompatActivity {
 
-    // private Spinner mProtocalSpinner;
+    // private Spinner mProtocolSpinner;
     private String host, username, password;
     private int port;
 
@@ -94,10 +94,10 @@ public class ConnectionActivity extends AppCompatActivity {
         mRadioRememberPasswordGroup = findViewById(R.id.radio_remember_passowrd);
 
 
-        mHost = findViewById(R.id.id_host);
-        mPort = findViewById(R.id.id_port);
-        mUsername = findViewById(R.id.id_username);
-        mPassword = findViewById(R.id.id_password);
+        mHost = findViewById(R.id.id_edit_host);
+        mPort = findViewById(R.id.id_edit_port);
+        mUsername = findViewById(R.id.id_edit_username);
+        mPassword = findViewById(R.id.id_edit_password);
 
         mPort.setInputType(InputType.TYPE_CLASS_NUMBER);
         mUsername.setInputType(InputType.TYPE_CLASS_TEXT);

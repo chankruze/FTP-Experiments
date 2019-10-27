@@ -1,10 +1,28 @@
 package in.geekofia.ftpfm.models;
 
-public class FTPConf {
-    String name, host, user, pass;
-    int port;
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
-    public FTPConf(String name, String host, int port, String user, String pass) {
+@Entity(tableName = "profiles_table")
+public class Profile {
+
+    @PrimaryKey(autoGenerate = true)
+    @NonNull
+    private int id;
+
+    private String name;
+
+    private String host;
+
+    private int port;
+
+    private String user;
+
+    private String pass;
+
+    public Profile(String name, String host, int port, String user, String pass) {
         if (!name.isEmpty()){
             this.name = name;
         } else {
@@ -33,6 +51,18 @@ public class FTPConf {
         return port;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public void setHost(String host) {
         this.host = host;
     }
@@ -47,5 +77,9 @@ public class FTPConf {
 
     public void setPort(int port) {
         this.port = port;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

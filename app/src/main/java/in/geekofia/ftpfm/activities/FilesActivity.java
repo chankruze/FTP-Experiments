@@ -23,7 +23,7 @@ import java.util.List;
 
 import in.geekofia.ftpfm.R;
 import in.geekofia.ftpfm.adapters.FileListAdapter;
-import in.geekofia.ftpfm.models.FTPConf;
+import in.geekofia.ftpfm.models.Profile;
 import in.geekofia.ftpfm.models.Item;
 import in.geekofia.ftpfm.utils.ListFTPFiles;
 import in.geekofia.ftpfm.utils.PermissionUtil;
@@ -52,7 +52,7 @@ public class FilesActivity extends ListActivity {
     private String TAG = getClass().getSimpleName();
 
     private FTPClient ftpclient;
-    private FTPConf ftpConf;
+    private Profile ftpConf;
 
     private static final int STORAGE_REQUEST_CODE = 1;
     private static String[] PERMISSIONS_STORAGE = {Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -86,7 +86,7 @@ public class FilesActivity extends ListActivity {
                 status = ftpConnect(ftpclient, host, username, password, port);
                 if (status == true) {
                     Log.d(TAG, "Connection Success");
-                    ftpConf = new FTPConf(null, host, port, username, password);
+                    ftpConf = new Profile(null, host, port, username, password);
 
                     runOnUiThread(new Runnable() {
                         @Override
