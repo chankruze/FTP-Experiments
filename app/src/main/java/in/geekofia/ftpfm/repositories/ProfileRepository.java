@@ -1,4 +1,4 @@
-package in.geekofia.ftpfm;
+package in.geekofia.ftpfm.repositories;
 
 import android.app.Application;
 import android.os.AsyncTask;
@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
+import in.geekofia.ftpfm.databases.ProfileDatabase;
 import in.geekofia.ftpfm.interfaces.ProfileDao;
 import in.geekofia.ftpfm.models.Profile;
 

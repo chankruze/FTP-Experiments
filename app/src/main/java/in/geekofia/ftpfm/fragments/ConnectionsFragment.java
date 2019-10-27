@@ -13,9 +13,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,10 +22,20 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
-import in.geekofia.ftpfm.ProfileViewModel;
+import in.geekofia.ftpfm.viewmodels.ProfileViewModel;
 import in.geekofia.ftpfm.R;
 import in.geekofia.ftpfm.adapters.ProfileAdapter;
 import in.geekofia.ftpfm.models.Profile;
+
+import static in.geekofia.ftpfm.activities.MainActivity.ADD_EDIT_CONNECTION_FRAGMENT;
+import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_HOST;
+import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_ID;
+import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_NAME;
+import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_PASSWORD;
+import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_PORT;
+import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_TITLE;
+import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_USER_NAME;
+import static in.geekofia.ftpfm.activities.MainActivity.HOME_FRAGMENT;
 
 public class ConnectionsFragment extends Fragment {
 
@@ -45,19 +53,26 @@ public class ConnectionsFragment extends Fragment {
         getActivity().setTitle("Manage Connections");
 //        setHasOptionsMenu(true);
         initViews(view);
+
         loadConnectionProfiles();
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            Profile newProfile = new Profile(bundle.getString("NAME"),
-                    bundle.getString("HOST"),
-                    bundle.getInt("PORT"),
-                    bundle.getString("USERNAME"),
-                    bundle.getString("PASS"));
+            int id = bundle.getInt(EXTRA_ID, -1);
+            String name = bundle.getString(EXTRA_NAME);
+            String host = bundle.getString(EXTRA_HOST);
+            int port = bundle.getInt(EXTRA_PORT);
+            String userName = bundle.getString(EXTRA_USER_NAME);
+            String password = bundle.getString(EXTRA_PASSWORD);
 
-            profileViewModel.insert(newProfile);
-        } else {
-            //
+            if (id == -1){
+                Profile newProfile = new Profile(name, host, port, userName, password);
+                profileViewModel.insert(newProfile);
+            } else {
+                Profile newProfile = new Profile(name, host, port, userName, password);
+                newProfile.setId(id);
+                profileViewModel.update(newProfile);
+            }
         }
 
         return view;
@@ -73,9 +88,9 @@ public class ConnectionsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 HomeFragment homeFragment = new HomeFragment();
-                if (getActivity().getSupportFragmentManager() != null){
+                if (getActivity().getSupportFragmentManager() != null) {
                     getActivity().getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment, "HOME_FRAGMENT").commit();
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment, HOME_FRAGMENT).commit();
                 }
             }
         });
@@ -92,10 +107,10 @@ public class ConnectionsFragment extends Fragment {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditConnectionFragment editConnectionFragment = new EditConnectionFragment();
-                if (getActivity().getSupportFragmentManager() != null){
+                AddEditConnectionFragment newConnectionFragment = new AddEditConnectionFragment();
+                if (getActivity().getSupportFragmentManager() != null) {
                     getActivity().getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, editConnectionFragment, "EDIT_CONNECTION_FRAGMENT").commit();
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, newConnectionFragment, ADD_EDIT_CONNECTION_FRAGMENT).commit();
                 }
             }
         });
@@ -124,6 +139,27 @@ public class ConnectionsFragment extends Fragment {
                 Toast.makeText(getContext(), "Profile deleted", Toast.LENGTH_SHORT).show();
             }
         }).attachToRecyclerView(mRecyclerView);
+
+        profileAdapter.setOnProfileClickListener(new ProfileAdapter.onProfileClickListener() {
+            @Override
+            public void onProfileClick(Profile profile) {
+                AddEditConnectionFragment addEditConnectionFragment = new AddEditConnectionFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString(EXTRA_TITLE, "Edit " + profile.getName());
+                bundle.putInt(EXTRA_ID, profile.getId());
+                bundle.putString(EXTRA_NAME, profile.getName());
+                bundle.putString(EXTRA_HOST, profile.getHost());
+                bundle.putInt(EXTRA_PORT, profile.getPort());
+                bundle.putString(EXTRA_USER_NAME, profile.getUser());
+                bundle.putString(EXTRA_PASSWORD, profile.getPass());
+                addEditConnectionFragment.setArguments(bundle);
+                addEditConnectionFragment.setArguments(bundle);
+                if (getActivity().getSupportFragmentManager() != null) {
+                    getActivity().getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, addEditConnectionFragment, ADD_EDIT_CONNECTION_FRAGMENT).commit();
+                }
+            }
+        });
     }
 
 //    @Override

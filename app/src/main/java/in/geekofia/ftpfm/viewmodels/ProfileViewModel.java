@@ -1,4 +1,4 @@
-package in.geekofia.ftpfm;
+package in.geekofia.ftpfm.viewmodels;
 
 import android.app.Application;
 
@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData;
 import java.util.List;
 
 import in.geekofia.ftpfm.models.Profile;
+import in.geekofia.ftpfm.repositories.ProfileRepository;
 
 public class ProfileViewModel extends AndroidViewModel {
 

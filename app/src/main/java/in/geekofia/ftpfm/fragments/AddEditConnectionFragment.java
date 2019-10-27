@@ -21,29 +21,51 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import in.geekofia.ftpfm.R;
-import in.geekofia.ftpfm.models.Profile;
 
-public class EditConnectionFragment extends Fragment {
+import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_HOST;
+import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_ID;
+import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_NAME;
+import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_PASSWORD;
+import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_PORT;
+import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_TITLE;
+import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_USER_NAME;
+
+public class AddEditConnectionFragment extends Fragment {
 
     private Toolbar mToolBar;
     private TextInputLayout mHostLayout, mPortLayout, mUsernameLayout, mPasswordLayout;
     private TextInputEditText mName, mHost, mPort, mUsername, mPassword;
     private RadioGroup mRadioConnectionTypeGroup;
+    private Bundle mBundle;
+    private int id;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_edit_connection, container, false);
 
-        Bundle bundle = this.getArguments();
-        if (bundle != null) {
-            getActivity().setTitle(bundle.getString("Title"));
+        setHasOptionsMenu(true);
+
+        initViews(view);
+
+        mBundle = this.getArguments();
+        if (mBundle != null) {
+            getActivity().setTitle(mBundle.getString(EXTRA_TITLE));
+            id = mBundle.getInt(EXTRA_ID);
+            mName.setText(mBundle.getString(EXTRA_NAME));
+            mHost.setText(mBundle.getString(EXTRA_HOST));
+            mPort.setText(String.valueOf(mBundle.getInt(EXTRA_PORT)));
+
+            if (mBundle.getString(EXTRA_USER_NAME).isEmpty() && mBundle.getString(EXTRA_PASSWORD).isEmpty()){
+                mRadioConnectionTypeGroup.check(R.id.connection_anonymous);
+            } else {
+                mUsername.setText(mBundle.getString(EXTRA_USER_NAME));
+                mPassword.setText(mBundle.getString(EXTRA_PASSWORD));
+            }
         } else {
             getActivity().setTitle("New Connection");
+            id = -1;
         }
-
-        setHasOptionsMenu(true);
-        initViews(view);
 
         return view;
     }
@@ -120,11 +142,17 @@ public class EditConnectionFragment extends Fragment {
 
         ConnectionsFragment connectionsFragment = new ConnectionsFragment();
         Bundle bundle = new Bundle();
-        bundle.putString("NAME", name);
-        bundle.putString("HOST", host);
-        bundle.putInt("PORT", port);
-        bundle.putString("USERNAME", userName);
-        bundle.putString("PASS", password);
+        bundle.putString(EXTRA_NAME, name);
+        bundle.putString(EXTRA_HOST, host);
+        bundle.putInt(EXTRA_PORT, port);
+        bundle.putString(EXTRA_USER_NAME, userName);
+        bundle.putString(EXTRA_PASSWORD, password);
+
+        // bundle presents if id != -1. Which means it is updating. So id is required.
+        if (id != -1 ){
+            bundle.putInt(EXTRA_ID, id);
+        }
+
         connectionsFragment.setArguments(bundle);
         if (getActivity().getSupportFragmentManager() != null) {
             getActivity().getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);

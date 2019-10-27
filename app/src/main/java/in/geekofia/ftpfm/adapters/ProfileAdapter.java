@@ -17,6 +17,7 @@ import in.geekofia.ftpfm.models.Profile;
 public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileHolder> {
 
     private List<Profile> profiles = new ArrayList<>();
+    private onProfileClickListener profileClickListener;
 
     @NonNull
     @Override
@@ -54,6 +55,24 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileH
             super(itemView);
             textViewName = itemView.findViewById(R.id.profile_name);
             textViewDesc = itemView.findViewById(R.id.profile_desc);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    if (profileClickListener != null && position != RecyclerView.NO_POSITION) {
+                        profileClickListener.onProfileClick(profiles.get(position));
+                    }
+                }
+            });
         }
+    }
+
+    public interface onProfileClickListener {
+        void onProfileClick(Profile profile);
+    }
+
+    public void setOnProfileClickListener(onProfileClickListener profileClickListener) {
+        this.profileClickListener = profileClickListener;
     }
 }

@@ -12,6 +12,17 @@ import in.geekofia.ftpfm.fragments.HomeFragment;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String EXTRA_TITLE = "in.geekofia.ftpfm.EXTRA_TITLE";
+    public static final String EXTRA_ID = "in.geekofia.ftpfm.EXTRA_ID";
+    public static final String EXTRA_NAME = "in.geekofia.ftpfm.EXTRA_NAME";
+    public static final String EXTRA_HOST = "in.geekofia.ftpfm.EXTRA_HOST";
+    public static final String EXTRA_PORT = "in.geekofia.ftpfm.EXTRA_PORT";
+    public static final String EXTRA_USER_NAME = "in.geekofia.ftpfm.EXTRA_USER_NAME";
+    public static final String EXTRA_PASSWORD = "in.geekofia.ftpfm.EXTRA_PASSWORD";
+
+    public static final String HOME_FRAGMENT = "HOME_FRAGMENT";
+    public static final String CONNECTION_FRAGMENT = "CONNECTION_FRAGMENT";
+    public static final String ADD_EDIT_CONNECTION_FRAGMENT = "ADD_EDIT_CONNECTION_FRAGMENT";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,11 +33,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             HomeFragment homeFragment = new HomeFragment();
-            Bundle bundle = new Bundle();
-            bundle.putString("Title", "Home");
-            homeFragment.setArguments(bundle);
             getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment, "HOME_FRAGMENT").commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment, HOME_FRAGMENT).commit();
         }
     }
 
