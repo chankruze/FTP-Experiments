@@ -17,7 +17,6 @@ import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.view.menu.MenuPopupHelper;
 import androidx.core.content.ContextCompat;
 
-
 import org.apache.commons.net.ftp.FTPClient;
 
 import java.io.IOException;
@@ -57,7 +56,7 @@ public class CustomFunctions {
         view.setLayoutParams(layoutParams);
     }
 
-    private static void fileDownload(final FilesActivity activity, final Context context, final Profile ftpConf, final Item item) {
+    private static void fileDownload(final FilesActivity activity, final Context context, final Profile profile, final Item item) {
         AlertDialog.Builder newDialog = new AlertDialog.Builder(context);
         newDialog.setTitle(fetchString(context, R.string.dl_confirm));
         newDialog.setMessage("Are you sure you want to download " + item.getName() + " ?");
@@ -74,7 +73,7 @@ public class CustomFunctions {
                         public void run() {
                             try {
                                 FTPClient mFTPClient = new FTPClient();
-                                ftpConnect(mFTPClient, ftpConf.getHost(), ftpConf.getUser(), ftpConf.getPass(), ftpConf.getPort());
+                                ftpConnect(mFTPClient, profile.getHost() , profile.getUser(), profile.getPass(), profile.getPort());
                                 ftpFileDownload(mFTPClient, context, item.getAbsolutePath(), item.getName(), null, null, item.getSizeInBytes());
                                 ftpDisconnect(mFTPClient);
                             } catch (IOException e) {
@@ -99,7 +98,7 @@ public class CustomFunctions {
         newDialog.show();
     }
 
-    public static void showFileOperations(final FilesActivity activity, final Context context, final FTPClient mFTPClient, View view, final Item mItem, final Profile ftpConf) {
+    public static void showFileOperations(final FilesActivity activity, final Context context, final FTPClient mFTPClient, View view, final Item mItem, final Profile profile) {
         // Setup Popup Menu
         MenuBuilder menuBuilder = new MenuBuilder(context);
         MenuInflater inflater = new MenuInflater(context);
@@ -117,7 +116,7 @@ public class CustomFunctions {
                         fileInfo(context, mItem);
                         return true;
                     case R.id.option_download:
-                        fileDownload(activity, context, ftpConf, mItem);
+                        fileDownload(activity, context, profile, mItem);
                         return true;
                     case R.id.option_rename:
 //                        fileRename(context, mItem);

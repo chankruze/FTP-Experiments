@@ -1,12 +1,13 @@
 package in.geekofia.ftpfm.models;
 
 import androidx.annotation.NonNull;
-import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
+
 @Entity(tableName = "profiles_table")
-public class Profile {
+public class Profile implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     @NonNull

@@ -28,10 +28,6 @@ import in.geekofia.ftpfm.models.Item;
 import in.geekofia.ftpfm.utils.ListFTPFiles;
 import in.geekofia.ftpfm.utils.PermissionUtil;
 
-import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_HOST;
-import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_PASSWORD;
-import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_PORT;
-import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_USER_NAME;
 import static in.geekofia.ftpfm.utils.CustomFunctions.showFileOperations;
 import static in.geekofia.ftpfm.utils.FTPClientFunctions.ftpConnect;
 
@@ -44,7 +40,7 @@ public class FilesActivity extends ListActivity {
     FTPFile[] ftpDirs = new FTPFile[0];
     String path = new String();
     private String host, username, password;
-    private int port;
+    private int id, port;
 
     // Views
     private View mLayout;
@@ -56,7 +52,7 @@ public class FilesActivity extends ListActivity {
     private String TAG = getClass().getSimpleName();
 
     private FTPClient ftpclient;
-    private Profile ftpConf;
+    private Profile mProfile;
 
     private static final int STORAGE_REQUEST_CODE = 1;
     private static String[] PERMISSIONS_STORAGE = {Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -70,10 +66,12 @@ public class FilesActivity extends ListActivity {
         initViews();
 
         Bundle b = getIntent().getExtras();
-        host = b.getString(EXTRA_HOST);
-        port = b.getInt(EXTRA_PORT);
-        username = b.getString(EXTRA_USER_NAME);
-        password = b.getString(EXTRA_PASSWORD);
+        mProfile = (Profile) b.getSerializable("PROFILE");
+        id = mProfile.getId();
+        host = mProfile.getHost();
+        port = mProfile.getPort();
+        username = mProfile.getUser();
+        password = mProfile.getPass();
 
         ftpclient = new FTPClient();
 
@@ -167,7 +165,7 @@ public class FilesActivity extends ListActivity {
         if (mItemType == Item.DIRECTORY || mItemType == Item.UP) {
             listFiles(item);
         } else {
-            showFileOperations(this, this, ftpclient, v, item, ftpConf);
+            showFileOperations(this, this, ftpclient, v, item, mProfile);
         }
     }
 

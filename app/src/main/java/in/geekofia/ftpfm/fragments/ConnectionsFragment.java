@@ -166,10 +166,7 @@ public class ConnectionsFragment extends Fragment {
             @Override
             public void onConnectClick(Profile profile) {
                 Intent intent = new Intent(getContext(), FilesActivity.class);
-                intent.putExtra(EXTRA_HOST, profile.getHost());
-                intent.putExtra(EXTRA_PORT, profile.getPort());
-                intent.putExtra(EXTRA_USER_NAME, profile.getUser());
-                intent.putExtra(EXTRA_PASSWORD, profile.getPass());
+                intent.putExtra("PROFILE", profile);
                 startActivity(intent);
             }
         });
