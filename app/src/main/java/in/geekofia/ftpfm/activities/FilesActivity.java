@@ -28,6 +28,10 @@ import in.geekofia.ftpfm.models.Item;
 import in.geekofia.ftpfm.utils.ListFTPFiles;
 import in.geekofia.ftpfm.utils.PermissionUtil;
 
+import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_HOST;
+import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_PASSWORD;
+import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_PORT;
+import static in.geekofia.ftpfm.activities.MainActivity.EXTRA_USER_NAME;
 import static in.geekofia.ftpfm.utils.CustomFunctions.showFileOperations;
 import static in.geekofia.ftpfm.utils.FTPClientFunctions.ftpConnect;
 
@@ -66,13 +70,10 @@ public class FilesActivity extends ListActivity {
         initViews();
 
         Bundle b = getIntent().getExtras();
-        ftpclient = b.getParcelable("FTP_CLIENT");
-
-
-        host = b.getString("host");
-        port = b.getInt("port");
-        username = b.getString("user");
-        password = b.getString("pass");
+        host = b.getString(EXTRA_HOST);
+        port = b.getInt(EXTRA_PORT);
+        username = b.getString(EXTRA_USER_NAME);
+        password = b.getString(EXTRA_PASSWORD);
 
         ftpclient = new FTPClient();
 
@@ -86,7 +87,6 @@ public class FilesActivity extends ListActivity {
                 status = ftpConnect(ftpclient, host, username, password, port);
                 if (status == true) {
                     Log.d(TAG, "Connection Success");
-                    ftpConf = new Profile(null, host, port, username, password);
 
                     runOnUiThread(new Runnable() {
                         @Override
@@ -175,6 +175,8 @@ public class FilesActivity extends ListActivity {
     public void onBackPressed() {
         if (directories.get(0).getTypeItem() == Item.UP) {
             listFiles(directories.get(0));
+        } else {
+            finish();
         }
     }
 

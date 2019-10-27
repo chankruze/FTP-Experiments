@@ -1,5 +1,6 @@
 package in.geekofia.ftpfm.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
+import in.geekofia.ftpfm.activities.FilesActivity;
 import in.geekofia.ftpfm.viewmodels.ProfileViewModel;
 import in.geekofia.ftpfm.R;
 import in.geekofia.ftpfm.adapters.ProfileAdapter;
@@ -141,6 +143,7 @@ public class ConnectionsFragment extends Fragment {
         }).attachToRecyclerView(mRecyclerView);
 
         profileAdapter.setOnProfileClickListener(new ProfileAdapter.onProfileClickListener() {
+
             @Override
             public void onProfileClick(Profile profile) {
                 AddEditConnectionFragment addEditConnectionFragment = new AddEditConnectionFragment();
@@ -158,6 +161,16 @@ public class ConnectionsFragment extends Fragment {
                     getActivity().getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, addEditConnectionFragment, ADD_EDIT_CONNECTION_FRAGMENT).commit();
                 }
+            }
+
+            @Override
+            public void onConnectClick(Profile profile) {
+                Intent intent = new Intent(getContext(), FilesActivity.class);
+                intent.putExtra(EXTRA_HOST, profile.getHost());
+                intent.putExtra(EXTRA_PORT, profile.getPort());
+                intent.putExtra(EXTRA_USER_NAME, profile.getUser());
+                intent.putExtra(EXTRA_PASSWORD, profile.getPass());
+                startActivity(intent);
             }
         });
     }

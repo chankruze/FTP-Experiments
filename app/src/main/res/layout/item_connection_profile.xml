@@ -18,11 +18,11 @@
                 android:text="@string/main_option_connection_desc" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/profile_option"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_more_vertical" />
+        <ImageButton
+            android:id="@+id/profile_connect"
+            android:layout_width="32sp"
+            android:layout_height="32sp"
+            android:background="@drawable/ic_check_network"/>
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>
