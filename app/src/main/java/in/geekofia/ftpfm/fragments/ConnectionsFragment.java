@@ -14,7 +14,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -110,12 +110,12 @@ public class ConnectionsFragment extends Fragment {
     }
 
     private void loadConnectionProfiles() {
-        profileViewModel = ViewModelProviders.of(getActivity()).get(ProfileViewModel.class);
+        profileViewModel = new ViewModelProvider(getActivity()).get(ProfileViewModel.class);
         profileViewModel.getAllProfiles().observe(this, new Observer<List<Profile>>() {
             @Override
             public void onChanged(List<Profile> profiles) {
 //                Toast.makeText(getContext(), "ON CHANGE CALLED", Toast.LENGTH_SHORT).show();
-                profileAdapter.setProfiles(profiles);
+                profileAdapter.submitList(profiles);
             }
         });
 
@@ -129,7 +129,7 @@ public class ConnectionsFragment extends Fragment {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 profileViewModel.delete(profileAdapter.getProfileAt(viewHolder.getAdapterPosition()));
-                Toast.makeText(getContext(), "Profile deleted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), profileAdapter.getProfileAt(viewHolder.getAdapterPosition()).getName() + " deleted", Toast.LENGTH_SHORT).show();
             }
         }).attachToRecyclerView(mRecyclerView);
 

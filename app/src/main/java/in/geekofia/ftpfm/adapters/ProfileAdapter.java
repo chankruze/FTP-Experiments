@@ -7,18 +7,37 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import in.geekofia.ftpfm.R;
 import in.geekofia.ftpfm.models.Profile;
 
-public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileHolder> {
+public class ProfileAdapter extends ListAdapter<Profile, ProfileAdapter.ProfileHolder> {
 
-    private List<Profile> profiles = new ArrayList<>();
     private onProfileClickListener profileClickListener;
+
+    public ProfileAdapter() {
+        super(DIFF_CALLBACK);
+    }
+
+    private static final DiffUtil.ItemCallback<Profile> DIFF_CALLBACK = new DiffUtil.ItemCallback<Profile>() {
+
+        @Override
+        public boolean areItemsTheSame(@NonNull Profile oldItem, @NonNull Profile newItem) {
+            return oldItem.getId() == newItem.getId();
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Profile oldItem, @NonNull Profile newItem) {
+            return oldItem.getName().equals(newItem.getName()) &&
+                    oldItem.getHost().equals(newItem.getHost()) &&
+                    oldItem.getPort() == newItem.getPort() &&
+                    oldItem.getUser().equals(newItem.getUser()) &&
+                    oldItem.getPass().equals(newItem.getPass());
+        }
+    };
 
     @NonNull
     @Override
@@ -29,23 +48,13 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileH
 
     @Override
     public void onBindViewHolder(@NonNull ProfileHolder holder, int position) {
-        Profile currentProfile = profiles.get(position);
+        Profile currentProfile = getItem(position);
         holder.textViewName.setText(currentProfile.getName());
         holder.textViewDesc.setText(currentProfile.getHost());
     }
 
-    @Override
-    public int getItemCount() {
-        return profiles.size();
-    }
-
-    public void setProfiles(List<Profile> profiles) {
-        this.profiles = profiles;
-        notifyDataSetChanged();
-    }
-
     public Profile getProfileAt(int position){
-        return profiles.get(position);
+        return getItem(position);
     }
 
     class ProfileHolder extends RecyclerView.ViewHolder {
@@ -64,7 +73,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileH
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     if (profileClickListener != null && position != RecyclerView.NO_POSITION) {
-                        profileClickListener.onProfileClick(profiles.get(position));
+                        profileClickListener.onProfileClick(getItem(position));
                     }
                 }
             });
@@ -74,7 +83,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ProfileH
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     if (profileClickListener != null && position != RecyclerView.NO_POSITION) {
-                        profileClickListener.onConnectClick(profiles.get(position));
+                        profileClickListener.onConnectClick(getItem(position));
                     }
                 }
             });

@@ -40,7 +40,7 @@ public class FilesActivity extends ListActivity {
     FTPFile[] ftpDirs = new FTPFile[0];
     String path = new String();
     private String host, username, password;
-    private int id, port;
+    private int port;
 
     // Views
     private View mLayout;
@@ -67,7 +67,6 @@ public class FilesActivity extends ListActivity {
 
         Bundle b = getIntent().getExtras();
         mProfile = (Profile) b.getSerializable("PROFILE");
-        id = mProfile.getId();
         host = mProfile.getHost();
         port = mProfile.getPort();
         username = mProfile.getUser();
