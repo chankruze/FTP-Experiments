@@ -170,7 +170,7 @@ public class FilesActivity extends ListActivity {
 
     @Override
     public void onBackPressed() {
-        if (directories.get(0).getTypeItem() == Item.UP) {
+        if (!directories.isEmpty() && directories.get(0).getTypeItem() == Item.UP) {
             listFiles(directories.get(0));
         } else {
             finish();
