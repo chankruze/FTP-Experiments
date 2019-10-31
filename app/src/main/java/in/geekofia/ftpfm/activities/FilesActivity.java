@@ -165,7 +165,7 @@ public class FilesActivity extends ListActivity {
         if (mItemType == Item.DIRECTORY || mItemType == Item.UP) {
             listFiles(item);
         } else {
-            showFileOperations(this, this, ftpclient, v, item, mProfile);
+            showFileOperations(this, this, v, item, mProfile);
         }
     }
 
