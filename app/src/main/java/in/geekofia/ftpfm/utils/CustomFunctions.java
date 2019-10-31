@@ -73,6 +73,7 @@ public class CustomFunctions {
                         public void run() {
                             try {
                                 FTPClient mFTPClient = new FTPClient();
+                                mFTPClient.setControlEncoding("UTF-8");
                                 ftpConnect(mFTPClient, profile.getHost() , profile.getUser(), profile.getPass(), profile.getPort());
                                 ftpFileDownload(mFTPClient, context, item.getAbsolutePath(), item.getName(), null, null, item.getSizeInBytes());
                                 ftpDisconnect(mFTPClient);

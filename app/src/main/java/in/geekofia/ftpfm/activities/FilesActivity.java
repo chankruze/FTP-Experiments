@@ -73,6 +73,7 @@ public class FilesActivity extends ListActivity {
         password = mProfile.getPass();
 
         ftpclient = new FTPClient();
+        ftpclient.setControlEncoding("UTF-8");
 
         // Connect to FTP server
         new Thread(new Runnable() {
