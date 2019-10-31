@@ -86,7 +86,6 @@ public class CustomFunctions {
                         return true;
                     case R.id.option_rename:
                         fileRename(activity, context, profile, mItem);
-                        Toast.makeText(context, "Rename selected", Toast.LENGTH_SHORT).show();
                         return true;
                     case R.id.option_delete:
 //                        fileDelete(context, mItem);

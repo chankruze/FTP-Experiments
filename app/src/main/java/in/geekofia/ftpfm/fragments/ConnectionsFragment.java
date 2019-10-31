@@ -111,7 +111,7 @@ public class ConnectionsFragment extends Fragment {
 
     private void loadConnectionProfiles() {
         profileViewModel = new ViewModelProvider(getActivity()).get(ProfileViewModel.class);
-        profileViewModel.getAllProfiles().observe(this, new Observer<List<Profile>>() {
+        profileViewModel.getAllProfiles().observe(getViewLifecycleOwner(), new Observer<List<Profile>>() {
             @Override
             public void onChanged(List<Profile> profiles) {
 //                Toast.makeText(getContext(), "ON CHANGE CALLED", Toast.LENGTH_SHORT).show();

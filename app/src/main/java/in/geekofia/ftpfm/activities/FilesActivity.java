@@ -36,7 +36,7 @@ public class FilesActivity extends ListActivity {
     List<Item> directories = new ArrayList<Item>();
     List<Item> files = new ArrayList<Item>();
     FTPFile[] currentDir = new FTPFile[0];
-    private FileListAdapter adapter;
+    private FileListAdapter fileListAdapter;
     FTPFile[] ftpDirs = new FTPFile[0];
     String path = new String();
     private String host, username, password;
@@ -109,8 +109,8 @@ public class FilesActivity extends ListActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            adapter = new FileListAdapter(getApplicationContext(), directories);
-                            mListView.setAdapter(adapter);
+                            fileListAdapter = new FileListAdapter(getApplicationContext(), directories);
+                            mListView.setAdapter(fileListAdapter);
                             mErrorText.setVisibility(View.GONE);
                             mImageView.setVisibility(View.GONE);
                         }
@@ -159,7 +159,7 @@ public class FilesActivity extends ListActivity {
     protected void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
 
-        final Item item = (Item) adapter.getItem(position);
+        final Item item = (Item) fileListAdapter.getItem(position);
         int mItemType = item.getTypeItem();
 
         if (mItemType == Item.DIRECTORY || mItemType == Item.UP) {
@@ -230,6 +230,6 @@ public class FilesActivity extends ListActivity {
 
         directories = listFTPFiles.getNewDirectories();
 
-        adapter.notifyDataSetChanged();
+        fileListAdapter.notifyDataSetChanged();
     }
 }

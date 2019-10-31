@@ -7,7 +7,7 @@ android {
         applicationId "in.geekofia.ftpfm"
         minSdkVersion 22
         targetSdkVersion 29
-        versionCode 40
+        versionCode 41
         versionName "1.0.0-beta03"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
