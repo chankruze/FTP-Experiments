@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import in.geekofia.ftpfm.R;
 import in.geekofia.ftpfm.activities.FilesActivity;
@@ -207,16 +208,16 @@ public class CustomFunctions {
                             List<String> splitPath = new ArrayList<>(Arrays.asList(item.getAbsolutePath().split("/")));
                             splitPath.removeAll(filters);
 
-                            String newFilePath = "";
+                            StringBuilder newFilePath = new StringBuilder();
                             for (int i = 0; i < splitPath.size() - 1; i++){
-                                newFilePath += splitPath.get(i) + "/";
-                                newFilePath.trim();
+                                newFilePath.append(splitPath.get(i)).append("/");
+                                newFilePath = new StringBuilder(newFilePath.toString().trim());
                             }
 
-                            mFTPClient.rename(item.getAbsolutePath(), newFilePath + mEditTextNewName.getText().toString());
+                            mFTPClient.rename(item.getAbsolutePath(), newFilePath + Objects.requireNonNull(mEditTextNewName.getText()).toString());
                             ftpDisconnect(mFTPClient);
                             FilesActivity filesActivity = (FilesActivity) activity;
-                            final String path = newFilePath;
+                            final String path = newFilePath.toString();
                             filesActivity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
