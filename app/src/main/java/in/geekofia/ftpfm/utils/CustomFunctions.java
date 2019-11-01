@@ -30,9 +30,11 @@ import java.util.List;
 
 import in.geekofia.ftpfm.R;
 import in.geekofia.ftpfm.activities.FilesActivity;
+import in.geekofia.ftpfm.adapters.FileListAdapter;
 import in.geekofia.ftpfm.models.Profile;
 import in.geekofia.ftpfm.models.Item;
 
+import static in.geekofia.ftpfm.activities.FilesActivity.listFiles;
 import static in.geekofia.ftpfm.utils.FTPClientFunctions.ftpDisconnect;
 import static in.geekofia.ftpfm.utils.FTPClientFunctions.ftpFileDownload;
 import static in.geekofia.ftpfm.utils.FTPClientFunctions.ftpConnect;
@@ -64,7 +66,7 @@ public class CustomFunctions {
     }
 
     // Show file operations
-    public static void showFileOperations(final FilesActivity activity, final Context context, View view, final Item mItem, final Profile profile) {
+    public static void showFileOperations(final FilesActivity activity, final Context context, View view, final Item mItem, final Profile profile, final List<Item> directories, final FileListAdapter fileListAdapter) {
         // Setup Popup Menu
         MenuBuilder menuBuilder = new MenuBuilder(context);
         MenuInflater inflater = new MenuInflater(context);
@@ -85,7 +87,7 @@ public class CustomFunctions {
                         fileDownload(activity, context, profile, mItem);
                         return true;
                     case R.id.option_rename:
-                        fileRename(activity, context, profile, mItem);
+                        fileRename(activity, context, profile, mItem, directories, fileListAdapter);
                         return true;
                     case R.id.option_delete:
 //                        fileDelete(context, mItem);
@@ -171,7 +173,7 @@ public class CustomFunctions {
     }
 
     // FTP File Rename
-    public static void fileRename(Activity activity, Context context, final Profile profile, final Item item) {
+    public static void fileRename(final Activity activity, Context context, final Profile profile, final Item item, final List<Item> directories, final FileListAdapter fileListAdapter) {
         LayoutInflater inflater = activity.getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_rename_file, null);
         final TextInputEditText mEditTextNewName = view.findViewById(R.id.id_edit_rename_file);
@@ -213,6 +215,14 @@ public class CustomFunctions {
 
                             mFTPClient.rename(item.getAbsolutePath(), newFilePath + mEditTextNewName.getText().toString());
                             ftpDisconnect(mFTPClient);
+                            FilesActivity filesActivity = (FilesActivity) activity;
+                            final String path = newFilePath;
+                            filesActivity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    listFiles(profile, path, directories, fileListAdapter);
+                                }
+                            });
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

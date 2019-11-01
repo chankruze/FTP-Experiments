@@ -10,14 +10,26 @@ import java.util.List;
 
 import in.geekofia.ftpfm.R;
 import in.geekofia.ftpfm.models.Item;
+import in.geekofia.ftpfm.models.Profile;
+
+import static in.geekofia.ftpfm.utils.FTPClientFunctions.ftpConnect;
 
 public class ListFTPFiles implements Runnable {
     private List<Item> newDirectories;
     private FTPClient mFTPClient;
+    private Profile mProfile;
     private String mPath;
 
-    public ListFTPFiles(FTPClient client, String path, List<Item> directories) {
-        this.mFTPClient = client;
+    public ListFTPFiles(FTPClient ftpClient, String path, List<Item> directories) {
+        this.mFTPClient = ftpClient;
+        this.mPath = path;
+        this.newDirectories = directories;
+        newDirectories.clear();
+    }
+
+    public ListFTPFiles(Profile profile, String path, List<Item> directories) {
+        this.mFTPClient = new FTPClient();
+        this.mProfile = profile;
         this.mPath = path;
         this.newDirectories = directories;
         newDirectories.clear();
@@ -25,6 +37,15 @@ public class ListFTPFiles implements Runnable {
 
     @Override
     public void run() {
+
+        mFTPClient.setControlEncoding("UTF-8");
+
+        if (this.mProfile != null){
+            boolean status = ftpConnect(mFTPClient, mProfile.getHost() , mProfile.getUser(), mProfile.getPass(), mProfile.getPort());
+            if (!status){
+                return;
+            }
+        }
         try {
             List<Item> files = new ArrayList<Item>();
             FTPFile[] mFiles = mFTPClient.listFiles(mPath);

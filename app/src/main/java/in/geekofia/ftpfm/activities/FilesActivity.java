@@ -73,7 +73,6 @@ public class FilesActivity extends ListActivity {
         password = mProfile.getPass();
 
         ftpclient = new FTPClient();
-        ftpclient.setControlEncoding("UTF-8");
 
         // Connect to FTP server
         new Thread(new Runnable() {
@@ -163,16 +162,16 @@ public class FilesActivity extends ListActivity {
         int mItemType = item.getTypeItem();
 
         if (mItemType == Item.DIRECTORY || mItemType == Item.UP) {
-            listFiles(item);
+            listFiles(mProfile, item.getAbsolutePath(), directories, fileListAdapter);
         } else {
-            showFileOperations(this, this, v, item, mProfile);
+            showFileOperations(this, this, v, item, mProfile, directories, fileListAdapter);
         }
     }
 
     @Override
     public void onBackPressed() {
         if (!directories.isEmpty() && directories.get(0).getTypeItem() == Item.UP) {
-            listFiles(directories.get(0));
+            listFiles(mProfile, directories.get(0).getAbsolutePath(), directories, fileListAdapter);
         } else {
             finish();
         }
@@ -218,8 +217,8 @@ public class FilesActivity extends ListActivity {
         }
     }
 
-    private void listFiles(Item item) {
-        ListFTPFiles listFTPFiles = new ListFTPFiles(ftpclient, item.getAbsolutePath(), directories);
+    public static void listFiles(Profile profile, String path, List<Item> directories, FileListAdapter fileListAdapter) {
+        ListFTPFiles listFTPFiles = new ListFTPFiles(profile, path, directories);
         Thread thread = new Thread(listFTPFiles);
         thread.start();
         try {

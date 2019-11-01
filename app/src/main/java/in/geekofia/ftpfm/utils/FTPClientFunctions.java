@@ -22,7 +22,6 @@ import java.text.DecimalFormat;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
 import in.geekofia.ftpfm.R;
@@ -56,25 +55,6 @@ public class FTPClientFunctions {
             e.printStackTrace();
             Log.d("FTP CONNECT", "Error: could not connect to host " + host);
         }
-        return false;
-    }
-
-    public static boolean ftpListDirs(FTPClient mFTPClient) {
-        FTPFile[] ftpDirs = new FTPFile[0];
-        String rootPath = new String();
-
-        try {
-            ftpDirs = mFTPClient.listDirectories();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        for (int i = 0; i < ftpDirs.length; i++) {
-            rootPath = ftpDirs[0].getName();
-            Log.d("CONNECT", "Directories in the ftp server are "
-                    + ftpDirs[i].getName());
-        }
-
         return false;
     }
 
@@ -141,16 +121,6 @@ public class FTPClientFunctions {
         }
 
         inputStream = mFTPClient.retrieveFileStream(mRemoteFilePath);
-//        MyInputStream myInputStream = new MyInputStream(mFTPClient, mRemoteFilePath);
-//        Thread thread = new Thread(myInputStream);
-//        thread.start();
-//        try {
-//            thread.join();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//
-//        inputStream = myInputStream.getInputStream();
 
         NotificationCompat.Builder notification = new NotificationCompat.Builder(mContext, DOWNLOAD_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_download)
