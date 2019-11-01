@@ -91,8 +91,7 @@ public class CustomFunctions {
                         fileRename(activity, context, profile, mItem, directories, fileListAdapter);
                         return true;
                     case R.id.option_delete:
-//                        fileDelete(context, mItem);
-                        Toast.makeText(context, "Delete selected", Toast.LENGTH_SHORT).show();
+                        fileDelete(activity, context, profile, mItem, directories, fileListAdapter);
                         return true;
                     default:
                         return false;
@@ -132,7 +131,7 @@ public class CustomFunctions {
     // FTP File Download
     private static void fileDownload(final FilesActivity activity, final Context context, final Profile profile, final Item item) {
         AlertDialog.Builder newDialog = new AlertDialog.Builder(context);
-        newDialog.setTitle(fetchString(context, R.string.dl_confirm));
+        newDialog.setTitle(fetchString(context, R.string.confirm_dl));
         newDialog.setMessage("Are you sure you want to download " + item.getName() + " ?");
 
         newDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -148,7 +147,7 @@ public class CustomFunctions {
                             try {
                                 FTPClient mFTPClient = new FTPClient();
                                 mFTPClient.setControlEncoding("UTF-8");
-                                ftpConnect(mFTPClient, profile.getHost() , profile.getUser(), profile.getPass(), profile.getPort());
+                                ftpConnect(mFTPClient, profile.getHost(), profile.getUser(), profile.getPass(), profile.getPort());
                                 ftpFileDownload(mFTPClient, context, item.getAbsolutePath(), item.getName(), null, null, item.getSizeInBytes());
                                 ftpDisconnect(mFTPClient);
                             } catch (IOException e) {
@@ -179,7 +178,7 @@ public class CustomFunctions {
         View view = inflater.inflate(R.layout.dialog_rename_file, null);
         final TextInputEditText mEditTextNewName = view.findViewById(R.id.id_edit_rename_file);
 
-        AlertDialog.Builder newDialog = new AlertDialog.Builder(context);
+        final AlertDialog.Builder newDialog = new AlertDialog.Builder(context);
         newDialog.setView(view);
         newDialog.setTitle("Rename " + item.getName());
         newDialog.setIcon(item.getIconId());
@@ -187,7 +186,7 @@ public class CustomFunctions {
         newDialog.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                dialog.cancel();
             }
         });
 
@@ -200,24 +199,15 @@ public class CustomFunctions {
                         try {
                             FTPClient mFTPClient = new FTPClient();
                             mFTPClient.setControlEncoding("UTF-8");
-                            ftpConnect(mFTPClient, profile.getHost() , profile.getUser(), profile.getPass(), profile.getPort());
+                            ftpConnect(mFTPClient, profile.getHost(), profile.getUser(), profile.getPass(), profile.getPort());
 
-                            List<String> filters = new ArrayList<>();
-                            filters.add("");
+                            String currentFilePath = getCurrentPath(item).toString();
+                            mFTPClient.rename(item.getAbsolutePath(), currentFilePath + Objects.requireNonNull(mEditTextNewName.getText()).toString());
 
-                            List<String> splitPath = new ArrayList<>(Arrays.asList(item.getAbsolutePath().split("/")));
-                            splitPath.removeAll(filters);
-
-                            StringBuilder newFilePath = new StringBuilder();
-                            for (int i = 0; i < splitPath.size() - 1; i++){
-                                newFilePath.append(splitPath.get(i)).append("/");
-                                newFilePath = new StringBuilder(newFilePath.toString().trim());
-                            }
-
-                            mFTPClient.rename(item.getAbsolutePath(), newFilePath + Objects.requireNonNull(mEditTextNewName.getText()).toString());
                             ftpDisconnect(mFTPClient);
+
                             FilesActivity filesActivity = (FilesActivity) activity;
-                            final String path = newFilePath.toString();
+                            final String path = currentFilePath.toString();
                             filesActivity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -234,6 +224,68 @@ public class CustomFunctions {
         newDialog.show();
     }
 
+    public static void fileDelete(final Activity activity, final Context context, final Profile profile, final Item item, final List<Item> directories, final FileListAdapter fileListAdapter) {
+        AlertDialog.Builder newDialog = new AlertDialog.Builder(context);
+        newDialog.setTitle(fetchString(context, R.string.confirm_delete));
+        newDialog.setMessage("Are you sure you want to delete " + item.getName() + " ?");
+
+        newDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            FTPClient mFTPClient = new FTPClient();
+                            mFTPClient.setControlEncoding("UTF-8");
+                            ftpConnect(mFTPClient, profile.getHost(), profile.getUser(), profile.getPass(), profile.getPort());
+
+                            mFTPClient.deleteFile(item.getAbsolutePath());
+
+                            ftpDisconnect(mFTPClient);
+
+                            FilesActivity filesActivity = (FilesActivity) activity;
+                            final String path = getCurrentPath(item).toString();
+                            filesActivity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    listFiles(profile, path, directories, fileListAdapter);
+                                }
+                            });
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
+            }
+        });
+
+        newDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        newDialog.show();
+    }
+
+    // Custom function to get item directory
+    private static StringBuilder getCurrentPath(Item item){
+        List<String> filters = new ArrayList<>();
+        filters.add("");
+
+        List<String> splitPath = new ArrayList<>(Arrays.asList(item.getAbsolutePath().split("/")));
+        splitPath.removeAll(filters);
+
+        StringBuilder currentFilePath = new StringBuilder();
+        for (int i = 0; i < splitPath.size() - 1; i++) {
+            currentFilePath.append(splitPath.get(i)).append("/");
+            currentFilePath = new StringBuilder(currentFilePath.toString().trim());
+        }
+        return currentFilePath;
+    }
 //    public static void FTPclose(FTPClient ftp) throws IOException{
 //        try {
 //            // checks if connected
