@@ -53,8 +53,9 @@
     <string name="file_cert">Certificate</string>
     <string name="file_json">JavaScript Object Notation</string>
 
-    <string name="confirm_dl">Download confirmation</string>
+    <string name="confirm_download">Download confirmation</string>
     <string name="confirm_delete">Delete confirmation</string>
+    <string name="confirm_upload">Upload confirmation</string>
 
     <string name="option_rename">Rename</string>
     <string name="option_delete">Delete</string>

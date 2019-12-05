@@ -6,9 +6,11 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.documentfile.provider.DocumentFile;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -163,29 +165,56 @@ public class FTPClientFunctions {
         inputStream.close();
     }
 
-    public static boolean ftpUpload(FTPClient mFTPClient, String srcFilePath, String desFileName, String desDirectory, Context context) {
-        boolean status = false;
-        try {
-            FileInputStream srcFileStream = new FileInputStream(srcFilePath);
-            // change working directory to the destination directory
-            // if (ftpChangeDirectory(desDirectory)) {
-            status = mFTPClient.storeFile(desFileName, srcFileStream);
-            // }
-            srcFileStream.close();
-            return status;
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.d("FTP FILE UPLOAD", "upload failed: " + e);
-        }
-        return status;
-    }
-
     private static void showServerReply(FTPClient ftpClient) {
         String[] replies = ftpClient.getReplyStrings();
         if (replies != null && replies.length > 0) {
             for (String aReply : replies) {
                 System.out.println("SERVER: " + aReply);
             }
+        }
+    }
+
+    public static void ftpFileUpload(Context context, FTPClient ftpClient, DocumentFile documentFile, String remoteDir) throws IOException {
+        String fileName = documentFile.getName();
+        String remoteFilePath = remoteDir + fileName;
+
+        InputStream inputStream = null;
+        try {
+            inputStream = context.getContentResolver().openInputStream(documentFile.getUri());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Start uploading file ....");
+        OutputStream outputStream = null;
+        try {
+            outputStream = ftpClient.storeFileStream(remoteFilePath);
+        } catch (IOException e) {
+            Toast.makeText(context, "Outputstream error...", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+
+
+        byte[] bytesIn = new byte[4096];
+        int read = 0;
+        if (inputStream != null) {
+            while ((read = inputStream.read(bytesIn)) != -1) {
+                if (outputStream != null) {
+                    outputStream.write(bytesIn, 0, read);
+                }
+            }
+        }
+
+        if (inputStream != null) {
+            inputStream.close();
+        }
+        if (outputStream != null) {
+            outputStream.close();
+        }
+        boolean completed = ftpClient.completePendingCommand();
+
+        if (completed) {
+            System.out.println("The file is uploaded successfully.");
         }
     }
 }

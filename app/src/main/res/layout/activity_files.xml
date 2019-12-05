@@ -42,10 +42,10 @@
         android:text="Edit Connection" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_file"
+        android:id="@+id/fab_file_upload"
         style="@style/Widget.MaterialComponents.FloatingActionButton"
         app:backgroundTint="@color/colorPrimary"
-        app:srcCompat="@drawable/ic_plus"
+        app:srcCompat="@drawable/ic_upload"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_width="wrap_content"

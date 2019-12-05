@@ -59,14 +59,13 @@ public class ProfileAdapter extends ListAdapter<Profile, ProfileAdapter.ProfileH
 
     class ProfileHolder extends RecyclerView.ViewHolder {
         private TextView textViewName, textViewDesc;
-        private Button connectButton;
 
 
-        public ProfileHolder(@NonNull View itemView) {
+        ProfileHolder(@NonNull View itemView) {
             super(itemView);
             textViewName = itemView.findViewById(R.id.profile_name);
             textViewDesc = itemView.findViewById(R.id.profile_desc);
-            connectButton = itemView.findViewById(R.id.profile_connect);
+            Button connectButton = itemView.findViewById(R.id.profile_connect);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

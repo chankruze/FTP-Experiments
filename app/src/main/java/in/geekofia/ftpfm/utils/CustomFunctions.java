@@ -18,6 +18,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.view.menu.MenuPopupHelper;
 import androidx.core.content.ContextCompat;
+import androidx.documentfile.provider.DocumentFile;
 
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -39,6 +40,8 @@ import static in.geekofia.ftpfm.activities.FilesActivity.listFiles;
 import static in.geekofia.ftpfm.utils.FTPClientFunctions.ftpDisconnect;
 import static in.geekofia.ftpfm.utils.FTPClientFunctions.ftpFileDownload;
 import static in.geekofia.ftpfm.utils.FTPClientFunctions.ftpConnect;
+import static in.geekofia.ftpfm.utils.FTPClientFunctions.ftpFileUpload;
+import static in.geekofia.ftpfm.utils.FTPClientFunctions.ftpUpload;
 
 public class CustomFunctions {
 
@@ -131,7 +134,7 @@ public class CustomFunctions {
     // FTP File Download
     private static void fileDownload(final FilesActivity activity, final Context context, final Profile profile, final Item item) {
         AlertDialog.Builder newDialog = new AlertDialog.Builder(context);
-        newDialog.setTitle(fetchString(context, R.string.confirm_dl));
+        newDialog.setTitle(fetchString(context, R.string.confirm_download));
         newDialog.setMessage("Are you sure you want to download " + item.getName() + " ?");
 
         newDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -286,6 +289,51 @@ public class CustomFunctions {
         }
         return currentFilePath;
     }
+
+    public static void fileUpload(final FilesActivity activity, final Context context, final Profile profile, final String uploadDir, final DocumentFile documentFile){
+        final String fileName = documentFile.getName();
+
+        AlertDialog.Builder newDialog = new AlertDialog.Builder(context);
+        newDialog.setTitle(fetchString(context, R.string.confirm_upload));
+        newDialog.setMessage(fileName + " will be uploaded to (/" + uploadDir + ")");
+
+        newDialog.setPositiveButton("Proceed", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //permission
+                if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(context, "Uploading " + fileName, Toast.LENGTH_LONG).show();
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            FTPClient mFTPClient = new FTPClient();
+                            mFTPClient.setControlEncoding("UTF-8");
+                            ftpConnect(mFTPClient, profile.getHost(), profile.getUser(), profile.getPass(), profile.getPort());
+                            try {
+                                ftpFileUpload(context, mFTPClient, documentFile, uploadDir);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            ftpDisconnect(mFTPClient);
+                        }
+                    }).start();
+                } else {
+                    activity.requestStoragePermission();
+                }
+            }
+        });
+
+        newDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        newDialog.show();
+    }
+
 //    public static void FTPclose(FTPClient ftp) throws IOException{
 //        try {
 //            // checks if connected
