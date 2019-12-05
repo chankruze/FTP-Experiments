@@ -6,7 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:statusBarColor">@color/colorPrimary</item>
+        <item name="android:statusBarColor">@color/colorDarkBg</item>
     </style>
 
     <style name="ButtonOutlined" parent="Widget.MaterialComponents.Button.OutlinedButton">
@@ -69,17 +69,23 @@
         <item name="cardElevation">8dp</item>
     </style>
 
-    <style name="CardMainOptionTitle">
+    <style name="CardMainOptionText">
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="CardMainOptionTitle" parent="CardMainOptionText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/colorTextPrimary</item>
+        <item name="android:textColor">@color/colorTextPrimaryProfile</item>
         <item name="android:textSize">16sp</item>
     </style>
 
-    <style name="CardMainOptionDescription">
+    <style name="CardMainOptionDescription" parent="CardMainOptionText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/colorTextSecondary</item>
+<!--        <item name="android:paddingTop">4dp</item>-->
+        <item name="android:textColor">@color/colorTextSecondaryProfile</item>
     </style>
 
     <style name="CardMainOptionIcon">
@@ -88,7 +94,7 @@
     </style>
 
     <style name="CardMainOptionLinearLayout">
-        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_height">80dp</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:gravity">center</item>
         <item name="android:padding">16dp</item>

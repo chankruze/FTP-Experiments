@@ -77,4 +77,6 @@
     <string name="toolbar_info">Info</string>
     <string name="toolbar_close">Close</string>
     <string name="toolbar_save">Save</string>
+
+    <string name="str_developer">Developed with ❤ by chankruze</string>
 </resources>

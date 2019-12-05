@@ -2,14 +2,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root_layout"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorDarkBg">
 
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@null"
+        android:background="@null"
         tools:listitem="@layout/file_item" />
 
     <ImageView
@@ -35,6 +38,17 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:textSize="16sp"
-        android:background="@android:color/transparent"
+        android:background="@null"
         android:text="Edit Connection" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_file"
+        style="@style/Widget.MaterialComponents.FloatingActionButton"
+        app:backgroundTint="@color/colorPrimary"
+        app:srcCompat="@drawable/ic_plus"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp" />
 </RelativeLayout>

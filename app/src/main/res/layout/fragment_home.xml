@@ -1,25 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/card_option_connections"
-    style="@style/CardMainOption">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@null">
 
-    <LinearLayout style="@style/CardMainOptionLinearLayout">
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_option_connections"
+        style="@style/CardMainOption">
 
-        <LinearLayout style="@style/CardMainOptionInnerLinearLayout">
+        <LinearLayout style="@style/CardMainOptionLinearLayout">
 
-            <TextView
-                style="@style/CardMainOptionTitle"
-                android:text="@string/main_option_connection_title" />
+            <LinearLayout style="@style/CardMainOptionInnerLinearLayout">
 
-            <TextView
-                style="@style/CardMainOptionDescription"
-                android:text="@string/main_option_connection_desc" />
+                <TextView
+                    style="@style/CardMainOptionTitle"
+                    android:text="@string/main_option_connection_title" />
+
+                <TextView
+                    style="@style/CardMainOptionDescription"
+                    android:text="@string/main_option_connection_desc" />
+            </LinearLayout>
+
+            <ImageView
+                style="@style/CardMainOptionIcon"
+                android:src="@drawable/ic_globe" />
         </LinearLayout>
 
-        <ImageView
-            style="@style/CardMainOptionIcon"
-            android:src="@drawable/ic_globe" />
-    </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
-</androidx.cardview.widget.CardView>
+    <include layout="@layout/made_with_love"/>
 
+</RelativeLayout>

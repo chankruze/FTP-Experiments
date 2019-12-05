@@ -10,7 +10,7 @@
             <TextView
                 android:id="@+id/profile_name"
                 style="@style/CardMainOptionTitle"
-                android:text="@string/main_option_connection_title" />
+                android:text="fdfdfgdfgfdgdfgfdgdgdbvbvfgdgdfgdfgfdgd" />
 
             <TextView
                 android:id="@+id/profile_desc"
@@ -18,11 +18,18 @@
                 android:text="@string/main_option_connection_desc" />
         </LinearLayout>
 
-        <ImageButton
+<!--        <ImageButton-->
+<!--            android:id="@+id/profile_connect"-->
+<!--            android:layout_width="32sp"-->
+<!--            android:layout_height="32sp"-->
+<!--            android:background="@drawable/ic_check_network"/>-->
+        <Button
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:id="@+id/profile_connect"
-            android:layout_width="32sp"
-            android:layout_height="32sp"
-            android:background="@drawable/ic_check_network"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/btn_connect"
+            android:textColor="@color/colorButtonConnect" />
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

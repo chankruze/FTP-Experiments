@@ -3,7 +3,7 @@ package in.geekofia.ftpfm.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -59,14 +59,14 @@ public class ProfileAdapter extends ListAdapter<Profile, ProfileAdapter.ProfileH
 
     class ProfileHolder extends RecyclerView.ViewHolder {
         private TextView textViewName, textViewDesc;
-        private ImageButton imageButton;
+        private Button connectButton;
 
 
         public ProfileHolder(@NonNull View itemView) {
             super(itemView);
             textViewName = itemView.findViewById(R.id.profile_name);
             textViewDesc = itemView.findViewById(R.id.profile_desc);
-            imageButton = itemView.findViewById(R.id.profile_connect);
+            connectButton = itemView.findViewById(R.id.profile_connect);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -78,7 +78,7 @@ public class ProfileAdapter extends ListAdapter<Profile, ProfileAdapter.ProfileH
                 }
             });
 
-            imageButton.setOnClickListener(new View.OnClickListener() {
+            connectButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();

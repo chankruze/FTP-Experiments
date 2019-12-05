@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@null"
     android:padding="16dp">
 
     <ImageView
@@ -21,7 +22,9 @@
         android:maxLines="1"
         android:ellipsize="end"
         android:textSize="16sp"
-        android:layout_marginStart="8sp"/>
+        android:textColor="@color/colorTextPrimary"
+        android:layout_marginStart="8sp"
+        tools:text="FileName.exe"/>
 
     <LinearLayout
         android:id="@+id/file_details"
@@ -40,7 +43,8 @@
             android:maxLines="1"
             android:ellipsize="end"
             android:textSize="12sp"
-            tools:text="50 MB"/>
+            tools:text="50 MB"
+            android:textColor="@color/colorTextSecondary"/>
 
         <TextView
             android:id="@+id/file_date"
@@ -50,6 +54,7 @@
             android:textSize="12sp"
             android:maxLines="1"
             android:ellipsize="end"
+            android:textColor="@color/colorTextSecondary"
             tools:text="22 Oct"/>
 
         <TextView
@@ -60,6 +65,7 @@
             android:textSize="12sp"
             android:maxLines="1"
             android:ellipsize="end"
+            android:textColor="@color/colorTextSecondary"
             tools:text="12:00"/>
 
         <TextView
@@ -70,6 +76,7 @@
             android:textSize="12sp"
             android:maxLines="1"
             android:ellipsize="end"
+            android:textColor="@color/colorTextSecondary"
             tools:text="Torrent File"/>
 
     </LinearLayout>
