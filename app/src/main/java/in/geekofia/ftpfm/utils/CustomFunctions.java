@@ -41,7 +41,6 @@ import static in.geekofia.ftpfm.utils.FTPClientFunctions.ftpDisconnect;
 import static in.geekofia.ftpfm.utils.FTPClientFunctions.ftpFileDownload;
 import static in.geekofia.ftpfm.utils.FTPClientFunctions.ftpConnect;
 import static in.geekofia.ftpfm.utils.FTPClientFunctions.ftpFileUpload;
-import static in.geekofia.ftpfm.utils.FTPClientFunctions.ftpUpload;
 
 public class CustomFunctions {
 
