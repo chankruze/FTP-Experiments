@@ -1,7 +1,6 @@
 package in.geekofia.ftpfm.utils;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
@@ -32,7 +31,6 @@ import java.util.Objects;
 
 import in.geekofia.ftpfm.R;
 import in.geekofia.ftpfm.activities.FilesActivity;
-import in.geekofia.ftpfm.adapters.FileListAdapter;
 import in.geekofia.ftpfm.models.Profile;
 import in.geekofia.ftpfm.models.Item;
 
@@ -69,7 +67,8 @@ public class CustomFunctions {
     }
 
     // Show file operations
-    public static void showFileOperations(final FilesActivity activity, final Context context, View view, final Item mItem, final Profile profile, final List<Item> directories, final FileListAdapter fileListAdapter) {
+    public static void showFileOperations(final FilesActivity activity, View view, final Item mItem) {
+        final Context context = activity.getContext();
         // Setup Popup Menu
         MenuBuilder menuBuilder = new MenuBuilder(context);
         MenuInflater inflater = new MenuInflater(context);
@@ -87,13 +86,13 @@ public class CustomFunctions {
                         fileInfo(context, mItem);
                         return true;
                     case R.id.option_download:
-                        fileDownload(activity, context, profile, mItem);
+                        fileDownload(activity, mItem);
                         return true;
                     case R.id.option_rename:
-                        fileRename(activity, context, profile, mItem, directories, fileListAdapter);
+                        fileRename(activity, mItem);
                         return true;
                     case R.id.option_delete:
-                        fileDelete(activity, context, profile, mItem, directories, fileListAdapter);
+                        fileDelete(activity, mItem);
                         return true;
                     default:
                         return false;
@@ -131,7 +130,10 @@ public class CustomFunctions {
     }
 
     // FTP File Download
-    private static void fileDownload(final FilesActivity activity, final Context context, final Profile profile, final Item item) {
+    private static void fileDownload(final FilesActivity activity, final Item item) {
+        final Context context = activity.getContext();
+        final Profile profile = activity.getProfile();
+
         AlertDialog.Builder newDialog = new AlertDialog.Builder(context);
         newDialog.setTitle(fetchString(context, R.string.confirm_download));
         newDialog.setMessage("Are you sure you want to download " + item.getName() + " ?");
@@ -175,7 +177,10 @@ public class CustomFunctions {
     }
 
     // FTP File Rename
-    public static void fileRename(final Activity activity, Context context, final Profile profile, final Item item, final List<Item> directories, final FileListAdapter fileListAdapter) {
+    public static void fileRename(final FilesActivity activity, final Item item) {
+        final Context context = activity.getContext();
+        final Profile profile = activity.getProfile();
+
         LayoutInflater inflater = activity.getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_rename_file, null);
         final TextInputEditText mEditTextNewName = view.findViewById(R.id.id_edit_rename_file);
@@ -208,12 +213,10 @@ public class CustomFunctions {
 
                             ftpDisconnect(mFTPClient);
 
-                            FilesActivity filesActivity = (FilesActivity) activity;
-                            final String path = currentFilePath.toString();
-                            filesActivity.runOnUiThread(new Runnable() {
+                            activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    listFiles(profile, path, directories, fileListAdapter);
+                                    listFiles(profile, getCurrentPath(item).toString(), activity.getDirectories(), activity.getFileListAdapter());
                                 }
                             });
                         } catch (IOException e) {
@@ -226,7 +229,10 @@ public class CustomFunctions {
         newDialog.show();
     }
 
-    public static void fileDelete(final Activity activity, final Context context, final Profile profile, final Item item, final List<Item> directories, final FileListAdapter fileListAdapter) {
+    public static void fileDelete(final FilesActivity activity, final Item item) {
+        final Context context = activity.getContext();
+        final Profile profile = activity.getProfile();
+
         AlertDialog.Builder newDialog = new AlertDialog.Builder(context);
         newDialog.setTitle(fetchString(context, R.string.confirm_delete));
         newDialog.setMessage("Are you sure you want to delete " + item.getName() + " ?");
@@ -246,12 +252,10 @@ public class CustomFunctions {
 
                             ftpDisconnect(mFTPClient);
 
-                            FilesActivity filesActivity = (FilesActivity) activity;
-                            final String path = getCurrentPath(item).toString();
-                            filesActivity.runOnUiThread(new Runnable() {
+                            activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    listFiles(profile, path, directories, fileListAdapter);
+                                    listFiles(profile, getCurrentPath(item).toString(), activity.getDirectories(), activity.getFileListAdapter());
                                 }
                             });
                         } catch (IOException e) {
@@ -289,7 +293,9 @@ public class CustomFunctions {
         return currentFilePath;
     }
 
-    public static void fileUpload(final FilesActivity activity, final Context context, final Profile profile, final String uploadDir, final DocumentFile documentFile){
+    public static void fileUpload(final FilesActivity activity, final String uploadDir, final DocumentFile documentFile){
+        final Context context = activity.getContext();
+        final Profile profile = activity.getProfile();
         final String fileName = documentFile.getName();
 
         AlertDialog.Builder newDialog = new AlertDialog.Builder(context);
@@ -314,6 +320,13 @@ public class CustomFunctions {
                                 e.printStackTrace();
                             }
                             ftpDisconnect(mFTPClient);
+
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    listFiles(profile, uploadDir, activity.getDirectories(), activity.getFileListAdapter());
+                                }
+                            });
                         }
                     }).start();
                 } else {

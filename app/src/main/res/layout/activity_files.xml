@@ -7,6 +7,11 @@
     android:layout_height="match_parent"
     android:background="@color/colorDarkBg">
 
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/pull_to_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
@@ -14,6 +19,8 @@
         android:divider="@null"
         android:background="@null"
         tools:listitem="@layout/file_item" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <ImageView
         android:id="@+id/error_logo"
@@ -42,10 +49,20 @@
         android:text="Edit Connection" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_progress"
+        style="@style/Widget.MaterialComponents.FloatingActionButton"
+        app:backgroundTint="@color/colorPrimary"
+        app:srcCompat="@drawable/ic_cloud_upload"
+        android:layout_alignParentEnd="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_file_upload"
         style="@style/Widget.MaterialComponents.FloatingActionButton"
         app:backgroundTint="@color/colorPrimary"
-        app:srcCompat="@drawable/ic_upload"
+        app:srcCompat="@drawable/ic_cloud_upload"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_width="wrap_content"

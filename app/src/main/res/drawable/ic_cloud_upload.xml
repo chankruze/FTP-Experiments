@@ -1,0 +1,28 @@
+<!--
+  ~ Created by chankruze (Chandan Kumar Mandal) on 7/12/19 3:02 AM
+  ~ Copyright (c) Geekofia 2019 and beyond . All rights reserved.
+  ~
+  ~ To use this in your private, school, college or (non)commercial project, contact at chankruze@geekofia.in or contact@geekofia.in.
+  ~ You are not allowed to use this in modified/unmodified or any form in any of your/others' project  without asking.
+  ~
+  ~ This inherits the root project license also in case  it present.
+  ~
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+  <path
+      android:fillColor="#FF000000"
+      android:pathData="M0,0h24v24h-24z"
+      android:strokeAlpha="0"
+      android:fillAlpha="0"/>
+  <path
+      android:fillColor="#FF000000"
+      android:pathData="M12.71,11.29a1,1 0,0 0,-1.4 0l-3,2.9a1,1 0,1 0,1.38 1.44L11,14.36V20a1,1 0,0 0,2 0v-5.59l1.29,1.3a1,1 0,0 0,1.42 0,1 1,0 0,0 0,-1.42z"/>
+  <path
+      android:fillColor="#FF000000"
+      android:pathData="M17.67,7A6,6 0,0 0,6.33 7a5,5 0,0 0,-3.08 8.27A1,1 0,1 0,4.75 14,3 3,0 0,1 7,9h0.1a1,1 0,0 0,1 -0.8,4 4,0 0,1 7.84,0 1,1 0,0 0,1 0.8H17a3,3 0,0 1,2.25 5,1 1,0 0,0 0.09,1.42 1,1 0,0 0,0.66 0.25,1 1,0 0,0 0.75,-0.34A5,5 0,0 0,17.67 7z"/>
+</vector>

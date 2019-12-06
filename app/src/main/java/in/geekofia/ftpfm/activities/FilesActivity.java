@@ -3,6 +3,7 @@ package in.geekofia.ftpfm.activities;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.documentfile.provider.DocumentFile;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -48,6 +50,7 @@ public class FilesActivity extends ListActivity implements View.OnClickListener 
     String path = new String();
     private String host, username, password;
     private int port;
+    private Context mContext = this;
 
     // Views
     private View mLayout;
@@ -55,7 +58,6 @@ public class FilesActivity extends ListActivity implements View.OnClickListener 
     private TextView mErrorText;
     private ImageView mImageView;
     private Button mBtnEditConnection;
-    private FloatingActionButton floatingActionButton;
 
     private String TAG = getClass().getSimpleName();
 
@@ -161,8 +163,17 @@ public class FilesActivity extends ListActivity implements View.OnClickListener 
         mBtnEditConnection = findViewById(R.id.btn_edit_details);
         mBtnEditConnection.setVisibility(View.GONE);
 
-        floatingActionButton = findViewById(R.id.fab_file_upload);
-        floatingActionButton.setOnClickListener(this);
+        FloatingActionButton fab_upload = findViewById(R.id.fab_file_upload);
+        fab_upload.setOnClickListener(this);
+
+        final SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.pull_to_refresh);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                listFiles(mProfile, directories.get(0).getName(), directories, fileListAdapter);
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     @Override
@@ -175,7 +186,7 @@ public class FilesActivity extends ListActivity implements View.OnClickListener 
         if (mItemType == Item.DIRECTORY || mItemType == Item.UP) {
             listFiles(mProfile, item.getAbsolutePath(), directories, fileListAdapter);
         } else {
-            showFileOperations(this, this, v, item, mProfile, directories, fileListAdapter);
+            showFileOperations(this,  v, item);
         }
     }
 
@@ -261,7 +272,7 @@ public class FilesActivity extends ListActivity implements View.OnClickListener 
                 String uploadDir = directories.get(0).getName();
 
                 assert documentFile != null;
-                fileUpload(this,this, mProfile, uploadDir, documentFile);
+                fileUpload(this, uploadDir, documentFile);
             } else {
                 finish();
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
@@ -281,5 +292,21 @@ public class FilesActivity extends ListActivity implements View.OnClickListener 
                     Toast.makeText(this, "Can't upload to root directory ;(", Toast.LENGTH_SHORT).show();
                 }
         }
+    }
+
+    public List<Item> getDirectories() {
+        return directories;
+    }
+
+    public FileListAdapter getFileListAdapter() {
+        return fileListAdapter;
+    }
+
+    public Profile getProfile() {
+        return mProfile;
+    }
+
+    public Context getContext() {
+        return mContext;
     }
 }
