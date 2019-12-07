@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -34,14 +35,16 @@ import in.geekofia.ftpfm.adapters.RemoteFilesAdapter;
 import in.geekofia.ftpfm.fragments.TransferSheetDialog;
 import in.geekofia.ftpfm.models.Profile;
 import in.geekofia.ftpfm.models.RemoteFile;
+import in.geekofia.ftpfm.services.RemoteFileDownloadService;
 import in.geekofia.ftpfm.utils.ListFTPFiles;
 import in.geekofia.ftpfm.utils.PermissionUtil;
+import in.geekofia.ftpfm.utils.TransferResultReceiver;
 
 import static in.geekofia.ftpfm.utils.CustomFunctions.fileUpload;
 import static in.geekofia.ftpfm.utils.CustomFunctions.showFileOperations;
 import static in.geekofia.ftpfm.utils.FTPClientFunctions.ftpConnect;
 
-public class FilesActivity extends AppCompatActivity implements View.OnClickListener {
+public class FilesActivity extends AppCompatActivity implements View.OnClickListener, TransferResultReceiver.TransferProgressReceiver {
 
     ArrayList<RemoteFile> directories = new ArrayList<RemoteFile>();
     ArrayList<RemoteFile> files = new ArrayList<RemoteFile>();
@@ -310,7 +313,7 @@ public class FilesActivity extends AppCompatActivity implements View.OnClickList
         return directories;
     }
 
-    public RemoteFilesAdapter getFileListAdapter() {
+    public RemoteFilesAdapter getRemoteFilesAdapter() {
         return mRemoteFilesAdapter;
     }
 
@@ -320,5 +323,33 @@ public class FilesActivity extends AppCompatActivity implements View.OnClickList
 
     public Context getContext() {
         return mContext;
+    }
+
+    public void registerDownloadService(Intent intent) {
+        // pass the ResultReceiver via the intent to the intent service
+        TransferResultReceiver transferResultReceiver = new TransferResultReceiver(new Handler(), this);
+        intent.putExtra("transferProgressReceiver", transferResultReceiver);
+        startService(intent);
+    }
+
+    public void registerUploadService(Intent intent) {
+        // pass the ResultReceiver via the intent to the intent service
+        TransferResultReceiver transferResultReceiver = new TransferResultReceiver(new Handler(), this);
+        intent.putExtra("transferProgressReceiver", transferResultReceiver);
+        startService(intent);
+    }
+
+    @Override
+    public void onReceiveResult(int resultCode, Bundle resultData) {
+        listFiles(mProfile, resultData.getString("mRemoteDir"), directories, mRemoteFilesAdapter);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+//        if(transferResultReceiver != null) {
+//            transferResultReceiver.setTransferProgressReceiver(null);
+//        }
     }
 }

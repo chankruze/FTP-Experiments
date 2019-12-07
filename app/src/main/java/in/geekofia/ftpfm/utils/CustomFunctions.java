@@ -3,6 +3,7 @@ package in.geekofia.ftpfm.utils;
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.view.Gravity;
@@ -33,12 +34,12 @@ import in.geekofia.ftpfm.R;
 import in.geekofia.ftpfm.activities.FilesActivity;
 import in.geekofia.ftpfm.models.Profile;
 import in.geekofia.ftpfm.models.RemoteFile;
+import in.geekofia.ftpfm.services.RemoteFileDownloadService;
+import in.geekofia.ftpfm.services.RemoteFileUploadService;
 
 import static in.geekofia.ftpfm.activities.FilesActivity.listFiles;
 import static in.geekofia.ftpfm.utils.FTPClientFunctions.ftpDisconnect;
-import static in.geekofia.ftpfm.utils.FTPClientFunctions.ftpFileDownload;
 import static in.geekofia.ftpfm.utils.FTPClientFunctions.ftpConnect;
-import static in.geekofia.ftpfm.utils.FTPClientFunctions.ftpFileUpload;
 
 public class CustomFunctions {
 
@@ -145,20 +146,15 @@ public class CustomFunctions {
                 //permission
                 if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(context, "Downloading " + remoteFile.getName(), Toast.LENGTH_LONG).show();
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                FTPClient mFTPClient = new FTPClient();
-                                mFTPClient.setControlEncoding("UTF-8");
-                                ftpConnect(mFTPClient, profile.getHost(), profile.getUser(), profile.getPass(), profile.getPort());
-                                ftpFileDownload(mFTPClient, context, remoteFile.getAbsolutePath(), remoteFile.getName(), null, null, remoteFile.getSizeInBytes());
-                                ftpDisconnect(mFTPClient);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }).start();
+
+                    Intent intent = new Intent(context, RemoteFileDownloadService.class);
+                    intent.putExtra("mProfile", profile);
+                    intent.putExtra("mRemoteFilePath", remoteFile.getAbsolutePath());
+                    intent.putExtra("RemoteFileName", remoteFile.getName());
+                    intent.putExtra("mLocalFilePath", "");
+                    intent.putExtra("mLocalFileName", "");
+                    intent.putExtra("mFileSize", remoteFile.getSizeInBytes());
+                    activity.registerDownloadService(intent);
                 } else {
                     activity.requestStoragePermission();
                 }
@@ -216,7 +212,7 @@ public class CustomFunctions {
                             activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    listFiles(profile, getCurrentPath(remoteFile).toString(), activity.getDirectories(), activity.getFileListAdapter());
+                                    listFiles(profile, getCurrentPath(remoteFile).toString(), activity.getDirectories(), activity.getRemoteFilesAdapter());
                                 }
                             });
                         } catch (IOException e) {
@@ -255,7 +251,7 @@ public class CustomFunctions {
                             activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    listFiles(profile, getCurrentPath(remoteFile).toString(), activity.getDirectories(), activity.getFileListAdapter());
+                                    listFiles(profile, getCurrentPath(remoteFile).toString(), activity.getDirectories(), activity.getRemoteFilesAdapter());
                                 }
                             });
                         } catch (IOException e) {
@@ -278,7 +274,7 @@ public class CustomFunctions {
     }
 
     // Custom function to get remoteFile directory
-    private static StringBuilder getCurrentPath(RemoteFile remoteFile){
+    private static StringBuilder getCurrentPath(RemoteFile remoteFile) {
         List<String> filters = new ArrayList<>();
         filters.add("");
 
@@ -293,7 +289,7 @@ public class CustomFunctions {
         return currentFilePath;
     }
 
-    public static void fileUpload(final FilesActivity activity, final String uploadDir, final DocumentFile documentFile){
+    public static void fileUpload(final FilesActivity activity, final String uploadDir, final DocumentFile documentFile) {
         final Context context = activity.getContext();
         final Profile profile = activity.getProfile();
         final String fileName = documentFile.getName();
@@ -308,27 +304,13 @@ public class CustomFunctions {
                 //permission
                 if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(context, "Uploading " + fileName, Toast.LENGTH_LONG).show();
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            FTPClient mFTPClient = new FTPClient();
-                            mFTPClient.setControlEncoding("UTF-8");
-                            ftpConnect(mFTPClient, profile.getHost(), profile.getUser(), profile.getPass(), profile.getPort());
-                            try {
-                                ftpFileUpload(context, mFTPClient, documentFile, uploadDir);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            ftpDisconnect(mFTPClient);
 
-                            activity.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    listFiles(profile, uploadDir, activity.getDirectories(), activity.getFileListAdapter());
-                                }
-                            });
-                        }
-                    }).start();
+                    Intent intent = new Intent(context, RemoteFileUploadService.class);
+                    intent.putExtra("mProfile", profile);
+                    intent.putExtra("mDocumentFileUri", documentFile.getUri());
+                    intent.putExtra("mDocumentFileName", documentFile.getName());
+                    intent.putExtra("mRemoteDir", uploadDir);
+                    activity.registerUploadService(intent);
                 } else {
                     activity.requestStoragePermission();
                 }
@@ -345,23 +327,4 @@ public class CustomFunctions {
 
         newDialog.show();
     }
-
-//    public static void FTPclose(FTPClient ftp) throws IOException{
-//        try {
-//            // checks if connected
-//            if (ftp.isConnected()) {
-//                // close FTP connection
-//                ftp.logout();
-//            }
-//        } finally {
-//            if (ftp.isConnected()) {
-//                try {
-//                    ftp.disconnect();
-//                } catch (IOException e) {
-//                    // ignore
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
-//    }
 }

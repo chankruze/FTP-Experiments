@@ -52,7 +52,7 @@ public class ListFTPFiles implements Runnable {
 
             for (FTPFile mFile : mFiles) {
                 if (mFile.isDirectory()) {
-                    if (mPath == "/") {
+                    if (mPath.equals("/")) {
                         RemoteFile mDir = new RemoteFile(RemoteFile.DIRECTORY, mFile.getName(), 0, mFile.getName() + "/");
                         newDirectories.add(mDir);
                     } else {
