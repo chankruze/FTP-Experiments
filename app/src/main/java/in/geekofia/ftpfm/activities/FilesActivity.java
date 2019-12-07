@@ -2,7 +2,6 @@ package in.geekofia.ftpfm.activities;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,13 +9,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.documentfile.provider.DocumentFile;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -26,13 +27,13 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import in.geekofia.ftpfm.R;
-import in.geekofia.ftpfm.adapters.FileListAdapter;
+import in.geekofia.ftpfm.adapters.RemoteFilesAdapter;
+import in.geekofia.ftpfm.fragments.TransferSheetDialog;
 import in.geekofia.ftpfm.models.Profile;
-import in.geekofia.ftpfm.models.Item;
+import in.geekofia.ftpfm.models.RemoteFile;
 import in.geekofia.ftpfm.utils.ListFTPFiles;
 import in.geekofia.ftpfm.utils.PermissionUtil;
 
@@ -40,12 +41,11 @@ import static in.geekofia.ftpfm.utils.CustomFunctions.fileUpload;
 import static in.geekofia.ftpfm.utils.CustomFunctions.showFileOperations;
 import static in.geekofia.ftpfm.utils.FTPClientFunctions.ftpConnect;
 
-public class FilesActivity extends ListActivity implements View.OnClickListener {
+public class FilesActivity extends AppCompatActivity implements View.OnClickListener {
 
-    List<Item> directories = new ArrayList<Item>();
-    List<Item> files = new ArrayList<Item>();
+    ArrayList<RemoteFile> directories = new ArrayList<RemoteFile>();
+    ArrayList<RemoteFile> files = new ArrayList<RemoteFile>();
     FTPFile[] currentDir = new FTPFile[0];
-    private FileListAdapter fileListAdapter;
     FTPFile[] ftpDirs = new FTPFile[0];
     String path = new String();
     private String host, username, password;
@@ -53,8 +53,9 @@ public class FilesActivity extends ListActivity implements View.OnClickListener 
     private Context mContext = this;
 
     // Views
+    private RecyclerView mRecyclerView;
+    private RemoteFilesAdapter mRemoteFilesAdapter;
     private View mLayout;
-    private ListView mListView;
     private TextView mErrorText;
     private ImageView mImageView;
     private Button mBtnEditConnection;
@@ -118,8 +119,15 @@ public class FilesActivity extends ListActivity implements View.OnClickListener 
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            fileListAdapter = new FileListAdapter(getApplicationContext(), directories);
-                            mListView.setAdapter(fileListAdapter);
+                            mRemoteFilesAdapter = new RemoteFilesAdapter(mContext, directories);
+                            mRecyclerView.setAdapter(mRemoteFilesAdapter);
+
+                            mRemoteFilesAdapter.setOnRemoteFileClickListener(new RemoteFilesAdapter.onRemoteFileClickListener() {
+                                @Override
+                                public void onRemoteFileClick(View view, RemoteFile remoteFile) {
+                                    remoteFileClick(view, remoteFile);
+                                }
+                            });
                             mErrorText.setVisibility(View.GONE);
                             mImageView.setVisibility(View.GONE);
                         }
@@ -133,7 +141,7 @@ public class FilesActivity extends ListActivity implements View.OnClickListener 
                             mErrorText.setVisibility(View.VISIBLE);
                             mImageView.setImageDrawable(getDrawable(R.drawable.ic_alert));
                             mImageView.setVisibility(View.VISIBLE);
-                            mListView.setVisibility(View.GONE);
+                            mRecyclerView.setVisibility(View.GONE);
                             mBtnEditConnection.setVisibility(View.VISIBLE);
                             mBtnEditConnection.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -152,7 +160,10 @@ public class FilesActivity extends ListActivity implements View.OnClickListener 
 
     private void initViews() {
         mLayout = findViewById(R.id.root_layout);
-        mListView = findViewById(android.R.id.list);
+        mRecyclerView = findViewById(R.id.recycler_view_items);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setHasFixedSize(true);
+//        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
         mErrorText = findViewById(R.id.error_text);
         mErrorText.setText("Connecting...");
@@ -166,34 +177,33 @@ public class FilesActivity extends ListActivity implements View.OnClickListener 
         FloatingActionButton fab_upload = findViewById(R.id.fab_file_upload);
         fab_upload.setOnClickListener(this);
 
+        FloatingActionButton fab_transfer = findViewById(R.id.fab_transfer);
+        fab_transfer.setOnClickListener(this);
+
         final SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.pull_to_refresh);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                listFiles(mProfile, directories.get(0).getName(), directories, fileListAdapter);
+                listFiles(mProfile, directories.get(0).getName(), directories, mRemoteFilesAdapter);
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
     }
 
-    @Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
+    private void remoteFileClick(View view, RemoteFile remoteFile) {
+        int mItemType = remoteFile.getTypeItem();
 
-        final Item item = (Item) fileListAdapter.getItem(position);
-        int mItemType = item.getTypeItem();
-
-        if (mItemType == Item.DIRECTORY || mItemType == Item.UP) {
-            listFiles(mProfile, item.getAbsolutePath(), directories, fileListAdapter);
+        if (mItemType == RemoteFile.DIRECTORY || mItemType == RemoteFile.UP) {
+            listFiles(mProfile, remoteFile.getAbsolutePath(), directories, mRemoteFilesAdapter);
         } else {
-            showFileOperations(this,  v, item);
+            showFileOperations(this, view, remoteFile);
         }
     }
 
     @Override
     public void onBackPressed() {
-        if (!directories.isEmpty() && directories.get(0).getTypeItem() == Item.UP) {
-            listFiles(mProfile, directories.get(0).getAbsolutePath(), directories, fileListAdapter);
+        if (!directories.isEmpty() && directories.get(0).getTypeItem() == RemoteFile.UP) {
+            listFiles(mProfile, directories.get(0).getAbsolutePath(), directories, mRemoteFilesAdapter);
         } else {
             finish();
         }
@@ -239,7 +249,7 @@ public class FilesActivity extends ListActivity implements View.OnClickListener 
         }
     }
 
-    public static void listFiles(Profile profile, String path, List<Item> directories, FileListAdapter fileListAdapter) {
+    public static void listFiles(Profile profile, String path, ArrayList<RemoteFile> directories, RemoteFilesAdapter remoteFilesAdapter) {
         ListFTPFiles listFTPFiles = new ListFTPFiles(profile, path, directories);
         Thread thread = new Thread(listFTPFiles);
         thread.start();
@@ -249,9 +259,7 @@ public class FilesActivity extends ListActivity implements View.OnClickListener 
             e.printStackTrace();
         }
 
-        directories = listFTPFiles.getNewDirectories();
-
-        fileListAdapter.notifyDataSetChanged();
+        remoteFilesAdapter.notifyDataSetChanged();
     }
 
     private void filePicker() {
@@ -286,20 +294,24 @@ public class FilesActivity extends ListActivity implements View.OnClickListener 
 
         switch (id) {
             case R.id.fab_file_upload:
-                if (directories.get(0).getTypeItem() == Item.UP) {
+                if (directories.get(0).getTypeItem() == RemoteFile.UP) {
                     filePicker();
                 } else {
                     Toast.makeText(this, "Can't upload to root directory ;(", Toast.LENGTH_SHORT).show();
                 }
+                break;
+            case R.id.fab_transfer:
+                TransferSheetDialog transferSheetDialog = new TransferSheetDialog();
+                transferSheetDialog.show(getSupportFragmentManager(), "Transfers");
         }
     }
 
-    public List<Item> getDirectories() {
+    public ArrayList<RemoteFile> getDirectories() {
         return directories;
     }
 
-    public FileListAdapter getFileListAdapter() {
-        return fileListAdapter;
+    public RemoteFilesAdapter getFileListAdapter() {
+        return mRemoteFilesAdapter;
     }
 
     public Profile getProfile() {

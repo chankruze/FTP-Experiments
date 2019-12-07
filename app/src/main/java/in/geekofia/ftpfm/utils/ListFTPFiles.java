@@ -9,25 +9,25 @@ import java.util.Arrays;
 import java.util.List;
 
 import in.geekofia.ftpfm.R;
-import in.geekofia.ftpfm.models.Item;
+import in.geekofia.ftpfm.models.RemoteFile;
 import in.geekofia.ftpfm.models.Profile;
 
 import static in.geekofia.ftpfm.utils.FTPClientFunctions.ftpConnect;
 
 public class ListFTPFiles implements Runnable {
-    private List<Item> newDirectories;
+    private ArrayList<RemoteFile> newDirectories;
     private FTPClient mFTPClient;
     private Profile mProfile;
     private String mPath;
 
-    public ListFTPFiles(FTPClient ftpClient, String path, List<Item> directories) {
+    public ListFTPFiles(FTPClient ftpClient, String path, ArrayList<RemoteFile> directories) {
         this.mFTPClient = ftpClient;
         this.mPath = path;
         this.newDirectories = directories;
         newDirectories.clear();
     }
 
-    public ListFTPFiles(Profile profile, String path, List<Item> directories) {
+    public ListFTPFiles(Profile profile, String path, ArrayList<RemoteFile> directories) {
         this.mFTPClient = new FTPClient();
         this.mProfile = profile;
         this.mPath = path;
@@ -47,16 +47,16 @@ public class ListFTPFiles implements Runnable {
             }
         }
         try {
-            List<Item> files = new ArrayList<Item>();
+            ArrayList<RemoteFile> files = new ArrayList<RemoteFile>();
             FTPFile[] mFiles = mFTPClient.listFiles(mPath);
 
             for (FTPFile mFile : mFiles) {
                 if (mFile.isDirectory()) {
                     if (mPath == "/") {
-                        Item mDir = new Item(Item.DIRECTORY, mFile.getName(), 0, mFile.getName() + "/");
+                        RemoteFile mDir = new RemoteFile(RemoteFile.DIRECTORY, mFile.getName(), 0, mFile.getName() + "/");
                         newDirectories.add(mDir);
                     } else {
-                        Item mDir = new Item(Item.DIRECTORY, mFile.getName(), 0, mPath + mFile.getName() + "/");
+                        RemoteFile mDir = new RemoteFile(RemoteFile.DIRECTORY, mFile.getName(), 0, mPath + mFile.getName() + "/");
                         newDirectories.add(mDir);
                     }
 
@@ -197,8 +197,8 @@ public class ListFTPFiles implements Runnable {
                             mFileType = R.string.file_generic;
                     }
 
-                    Item item = new Item(Item.FILE, mFile, mIconId, mPath + mFile.getName() + "/", mFileType);
-                    files.add(item);
+                    RemoteFile remoteFile = new RemoteFile(RemoteFile.FILE, mFile, mIconId, mPath + mFile.getName() + "/", mFileType);
+                    files.add(remoteFile);
                 }
             }
 
@@ -226,14 +226,14 @@ public class ListFTPFiles implements Runnable {
                 }
 
 //                System.out.println("## Parent Path : " + parentPath);
-                newDirectories.add(0, new Item(Item.UP, mPath, parentPath));
+                newDirectories.add(0, new RemoteFile(RemoteFile.UP, mPath, parentPath));
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public List<Item> getNewDirectories() {
+    public ArrayList<RemoteFile> getNewDirectories() {
         return newDirectories;
     }
 }

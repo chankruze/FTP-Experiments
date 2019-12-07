@@ -21,4 +21,7 @@
     <color name="colorTextSecondaryProfile">#039BE5</color>
 
     <color name="colorButtonConnect">#43A047</color>
+
+    <color name="colorTransferSheetBg">#3C4556</color>
+    <color name="colorTransferSheetText">#FFFFFF</color>
 </resources>

@@ -7,8 +7,8 @@ android {
         applicationId "in.geekofia.ftpfm"
         minSdkVersion 22
         targetSdkVersion 29
-        versionCode 48
-        versionName "2.0.0-rc2"
+        versionCode 49
+        versionName "3.0.0-rc1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

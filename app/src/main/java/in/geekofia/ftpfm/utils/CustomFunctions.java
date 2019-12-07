@@ -32,7 +32,7 @@ import java.util.Objects;
 import in.geekofia.ftpfm.R;
 import in.geekofia.ftpfm.activities.FilesActivity;
 import in.geekofia.ftpfm.models.Profile;
-import in.geekofia.ftpfm.models.Item;
+import in.geekofia.ftpfm.models.RemoteFile;
 
 import static in.geekofia.ftpfm.activities.FilesActivity.listFiles;
 import static in.geekofia.ftpfm.utils.FTPClientFunctions.ftpDisconnect;
@@ -67,12 +67,12 @@ public class CustomFunctions {
     }
 
     // Show file operations
-    public static void showFileOperations(final FilesActivity activity, View view, final Item mItem) {
+    public static void showFileOperations(final FilesActivity activity, View view, final RemoteFile mRemoteFile) {
         final Context context = activity.getContext();
         // Setup Popup Menu
         MenuBuilder menuBuilder = new MenuBuilder(context);
         MenuInflater inflater = new MenuInflater(context);
-        inflater.inflate(R.menu.menu_frag_file_operations, menuBuilder);
+        inflater.inflate(R.menu.menu_file_operations, menuBuilder);
         MenuPopupHelper optionsMenu = new MenuPopupHelper(context, menuBuilder, view);
         optionsMenu.setForceShowIcon(true);
         optionsMenu.setGravity(Gravity.END);
@@ -83,16 +83,16 @@ public class CustomFunctions {
             public boolean onMenuItemSelected(MenuBuilder menu, MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.option_info:
-                        fileInfo(context, mItem);
+                        fileInfo(context, mRemoteFile);
                         return true;
                     case R.id.option_download:
-                        fileDownload(activity, mItem);
+                        fileDownload(activity, mRemoteFile);
                         return true;
                     case R.id.option_rename:
-                        fileRename(activity, mItem);
+                        fileRename(activity, mRemoteFile);
                         return true;
                     case R.id.option_delete:
-                        fileDelete(activity, mItem);
+                        fileDelete(activity, mRemoteFile);
                         return true;
                     default:
                         return false;
@@ -110,13 +110,13 @@ public class CustomFunctions {
     }
 
     // FTP File Info
-    private static void fileInfo(Context context, Item item) {
-        String message = context.getResources().getString(R.string.alert_info_message, item.getPermission(), item.getUser(),
-                item.getGroup(), item.getSize(), item.getUnit(), item.getDate(), item.getTime(), item.getAbsolutePath(),
-                fetchString(context, item.getTypeId()));
+    private static void fileInfo(Context context, RemoteFile remoteFile) {
+        String message = context.getResources().getString(R.string.alert_info_message, remoteFile.getPermission(), remoteFile.getUser(),
+                remoteFile.getGroup(), remoteFile.getSize(), remoteFile.getUnit(), remoteFile.getDate(), remoteFile.getTime(), remoteFile.getAbsolutePath(),
+                fetchString(context, remoteFile.getTypeId()));
         AlertDialog.Builder newDialog = new AlertDialog.Builder(context);
-        newDialog.setTitle(item.getName());
-        newDialog.setIcon(item.getIconId());
+        newDialog.setTitle(remoteFile.getName());
+        newDialog.setIcon(remoteFile.getIconId());
         newDialog.setMessage(message);
 
         newDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -130,13 +130,13 @@ public class CustomFunctions {
     }
 
     // FTP File Download
-    private static void fileDownload(final FilesActivity activity, final Item item) {
+    private static void fileDownload(final FilesActivity activity, final RemoteFile remoteFile) {
         final Context context = activity.getContext();
         final Profile profile = activity.getProfile();
 
         AlertDialog.Builder newDialog = new AlertDialog.Builder(context);
         newDialog.setTitle(fetchString(context, R.string.confirm_download));
-        newDialog.setMessage("Are you sure you want to download " + item.getName() + " ?");
+        newDialog.setMessage("Are you sure you want to download " + remoteFile.getName() + " ?");
 
         newDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
@@ -144,7 +144,7 @@ public class CustomFunctions {
 
                 //permission
                 if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(context, "Downloading " + item.getName(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Downloading " + remoteFile.getName(), Toast.LENGTH_LONG).show();
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -152,7 +152,7 @@ public class CustomFunctions {
                                 FTPClient mFTPClient = new FTPClient();
                                 mFTPClient.setControlEncoding("UTF-8");
                                 ftpConnect(mFTPClient, profile.getHost(), profile.getUser(), profile.getPass(), profile.getPort());
-                                ftpFileDownload(mFTPClient, context, item.getAbsolutePath(), item.getName(), null, null, item.getSizeInBytes());
+                                ftpFileDownload(mFTPClient, context, remoteFile.getAbsolutePath(), remoteFile.getName(), null, null, remoteFile.getSizeInBytes());
                                 ftpDisconnect(mFTPClient);
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -177,7 +177,7 @@ public class CustomFunctions {
     }
 
     // FTP File Rename
-    public static void fileRename(final FilesActivity activity, final Item item) {
+    public static void fileRename(final FilesActivity activity, final RemoteFile remoteFile) {
         final Context context = activity.getContext();
         final Profile profile = activity.getProfile();
 
@@ -187,8 +187,8 @@ public class CustomFunctions {
 
         final AlertDialog.Builder newDialog = new AlertDialog.Builder(context);
         newDialog.setView(view);
-        newDialog.setTitle("Rename " + item.getName());
-        newDialog.setIcon(item.getIconId());
+        newDialog.setTitle("Rename " + remoteFile.getName());
+        newDialog.setIcon(remoteFile.getIconId());
 
         newDialog.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
             @Override
@@ -208,15 +208,15 @@ public class CustomFunctions {
                             mFTPClient.setControlEncoding("UTF-8");
                             ftpConnect(mFTPClient, profile.getHost(), profile.getUser(), profile.getPass(), profile.getPort());
 
-                            String currentFilePath = getCurrentPath(item).toString();
-                            mFTPClient.rename(item.getAbsolutePath(), currentFilePath + Objects.requireNonNull(mEditTextNewName.getText()).toString());
+                            String currentFilePath = getCurrentPath(remoteFile).toString();
+                            mFTPClient.rename(remoteFile.getAbsolutePath(), currentFilePath + Objects.requireNonNull(mEditTextNewName.getText()).toString());
 
                             ftpDisconnect(mFTPClient);
 
                             activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    listFiles(profile, getCurrentPath(item).toString(), activity.getDirectories(), activity.getFileListAdapter());
+                                    listFiles(profile, getCurrentPath(remoteFile).toString(), activity.getDirectories(), activity.getFileListAdapter());
                                 }
                             });
                         } catch (IOException e) {
@@ -229,13 +229,13 @@ public class CustomFunctions {
         newDialog.show();
     }
 
-    public static void fileDelete(final FilesActivity activity, final Item item) {
+    public static void fileDelete(final FilesActivity activity, final RemoteFile remoteFile) {
         final Context context = activity.getContext();
         final Profile profile = activity.getProfile();
 
         AlertDialog.Builder newDialog = new AlertDialog.Builder(context);
         newDialog.setTitle(fetchString(context, R.string.confirm_delete));
-        newDialog.setMessage("Are you sure you want to delete " + item.getName() + " ?");
+        newDialog.setMessage("Are you sure you want to delete " + remoteFile.getName() + " ?");
 
         newDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
@@ -248,14 +248,14 @@ public class CustomFunctions {
                             mFTPClient.setControlEncoding("UTF-8");
                             ftpConnect(mFTPClient, profile.getHost(), profile.getUser(), profile.getPass(), profile.getPort());
 
-                            mFTPClient.deleteFile(item.getAbsolutePath());
+                            mFTPClient.deleteFile(remoteFile.getAbsolutePath());
 
                             ftpDisconnect(mFTPClient);
 
                             activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    listFiles(profile, getCurrentPath(item).toString(), activity.getDirectories(), activity.getFileListAdapter());
+                                    listFiles(profile, getCurrentPath(remoteFile).toString(), activity.getDirectories(), activity.getFileListAdapter());
                                 }
                             });
                         } catch (IOException e) {
@@ -277,12 +277,12 @@ public class CustomFunctions {
         newDialog.show();
     }
 
-    // Custom function to get item directory
-    private static StringBuilder getCurrentPath(Item item){
+    // Custom function to get remoteFile directory
+    private static StringBuilder getCurrentPath(RemoteFile remoteFile){
         List<String> filters = new ArrayList<>();
         filters.add("");
 
-        List<String> splitPath = new ArrayList<>(Arrays.asList(item.getAbsolutePath().split("/")));
+        List<String> splitPath = new ArrayList<>(Arrays.asList(remoteFile.getAbsolutePath().split("/")));
         splitPath.removeAll(filters);
 
         StringBuilder currentFilePath = new StringBuilder();
