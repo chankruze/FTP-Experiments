@@ -306,6 +306,7 @@ public class FilesActivity extends AppCompatActivity implements View.OnClickList
             case R.id.fab_transfer:
                 TransferSheetDialog transferSheetDialog = new TransferSheetDialog();
                 transferSheetDialog.show(getSupportFragmentManager(), "Transfers");
+                break;
         }
     }
 

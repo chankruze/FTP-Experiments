@@ -6,7 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:statusBarColor">@color/colorDarkBg</item>
+        <item name="android:statusBarColor">@color/colorDarkBgOne</item>
     </style>
 
     <style name="ButtonOutlined" parent="Widget.MaterialComponents.Button.OutlinedButton">
@@ -34,7 +34,12 @@
 
     <style name="RippleView">
         <item name="android:clickable">true</item>
-        <item name="android:background">?selectableItemBackgroundBorderless</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+    </style>
+
+    <style name="RippleCardView">
+        <item name="android:clickable">true</item>
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
     </style>
 
     <style name="AppTileBarLogo">
@@ -57,14 +62,14 @@
         <item name="android:layout_centerVertical">true</item>
     </style>
 
-    <style name="CardMainOption" parent="RippleView">
+    <style name="CardMainOption" parent="RippleCardView">
         <item name="android:layout_margin">8dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
         <!--<item name="android:layout_rowWeight">1</item>-->
         <!--<item name="android:layout_columnWeight">1</item>-->
 
-        <item name="cardBackgroundColor">@color/colorPrimary</item>
+        <item name="cardBackgroundColor">@color/colorCardBgOne</item>
         <item name="cardCornerRadius">8dp</item>
         <item name="cardElevation">8dp</item>
     </style>

@@ -22,8 +22,10 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".services.RemoteFileDownloadService"/>
-        <service android:name=".services.RemoteFileUploadService"/>
+        <service
+            android:name=".services.DownloadService"
+            android:exported="false" />
+        <service android:name=".services.RemoteFileUploadService" />
     </application>
 
 </manifest>

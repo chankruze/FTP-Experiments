@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#FFFFFF</color>
-    <color name="colorPrimaryDark">@color/colorDarkBg</color>
+    <color name="colorPrimaryDark">@color/colorDarkBgOne</color>
     <color name="colorAccent">#42A5F5</color>
 
     <color name="colorTextPrimary">#EEE8D5</color>
@@ -13,15 +13,19 @@
     <color name="colorGray">#5E5F73</color>
 <!--    <color name="colorToolbar">#FDD835</color>-->
 
-    <color name="colorDarkBg">#073642</color>
+    <color name="colorDarkBgOne">#073642</color>
+    <color name="colorDarkBgTwo">#000000</color>
 
-    <color name="colorToolbar">@color/colorDarkBg</color>
+    <color name="colorToolbar">@color/colorDarkBgOne</color>
 
-    <color name="colorTextPrimaryProfile">#000000</color>
+    <color name="colorTextPrimaryProfile">@color/colorPrimary</color>
     <color name="colorTextSecondaryProfile">#039BE5</color>
 
     <color name="colorButtonConnect">#43A047</color>
 
     <color name="colorTransferSheetBg">#3C4556</color>
     <color name="colorTransferSheetText">#FFFFFF</color>
+
+    <color name="colorCardBgOne">#000000</color>
+    <color name="colorCardBgTwo">#073642</color>
 </resources>

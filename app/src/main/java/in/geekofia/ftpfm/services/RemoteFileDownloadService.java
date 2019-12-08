@@ -63,8 +63,10 @@ public class RemoteFileDownloadService extends IntentService {
         final ResultReceiver receiver = intent.getParcelableExtra("transferProgressReceiver");
         FTPClient mFTPClient = new FTPClient();
         mFTPClient.setControlEncoding("UTF-8");
-        assert profile != null;
-        ftpConnect(mFTPClient, profile.getHost(), profile.getUser(), profile.getPass(), profile.getPort());
+
+        if (profile != null){
+            ftpConnect(mFTPClient, profile.getHost(), profile.getUser(), profile.getPass(), profile.getPort());
+        }
 
         String mLocalFilePath, mLocalFileName;
         InputStream inputStream = null;

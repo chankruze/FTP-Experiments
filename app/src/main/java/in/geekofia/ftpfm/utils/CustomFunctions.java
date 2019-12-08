@@ -34,6 +34,7 @@ import in.geekofia.ftpfm.R;
 import in.geekofia.ftpfm.activities.FilesActivity;
 import in.geekofia.ftpfm.models.Profile;
 import in.geekofia.ftpfm.models.RemoteFile;
+import in.geekofia.ftpfm.services.DownloadService;
 import in.geekofia.ftpfm.services.RemoteFileDownloadService;
 import in.geekofia.ftpfm.services.RemoteFileUploadService;
 
@@ -147,14 +148,14 @@ public class CustomFunctions {
                 if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(context, "Downloading " + remoteFile.getName(), Toast.LENGTH_LONG).show();
 
-                    Intent intent = new Intent(context, RemoteFileDownloadService.class);
+                    Intent intent = new Intent(context, DownloadService.class);
                     intent.putExtra("mProfile", profile);
                     intent.putExtra("mRemoteFilePath", remoteFile.getAbsolutePath());
                     intent.putExtra("RemoteFileName", remoteFile.getName());
                     intent.putExtra("mLocalFilePath", "");
                     intent.putExtra("mLocalFileName", "");
                     intent.putExtra("mFileSize", remoteFile.getSizeInBytes());
-                    activity.registerDownloadService(intent);
+                    activity.startService(intent);
                 } else {
                     activity.requestStoragePermission();
                 }
