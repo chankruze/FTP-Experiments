@@ -6,14 +6,21 @@
 
 package in.geekofia.ftpfm.services;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.os.ResultReceiver;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import org.apache.commons.net.ftp.FTPClient;
@@ -30,8 +37,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import in.geekofia.ftpfm.R;
 import in.geekofia.ftpfm.models.Profile;
 
+import static in.geekofia.ftpfm.utils.CustomFunctions.fetchString;
 import static in.geekofia.ftpfm.utils.FTPClientFunctions.ftpConnect;
 
 public class DownloadService extends Service {
@@ -43,15 +52,19 @@ public class DownloadService extends Service {
     private long mFileSize;
     private Profile profile;
     private ResultReceiver receiver;
+    private Context mContext, mAppContext;
 
     private LocalBroadcastManager mLocalBroadcastManager;
     public static final String ACTION = "in.geekofia.ftpfm.services.DownloadService";
+//    private static final String DOWNLOAD_CHANNEL_ID = "FTP_DOWNLOAD";
 
     @Override
     public void onCreate() {
         super.onCreate();
 
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
+        mAppContext = this.getApplicationContext();
+        mContext = this.getBaseContext();
     }
 
     @Override
@@ -79,6 +92,16 @@ public class DownloadService extends Service {
             this.mFileSize = intent.getLongExtra("mFileSize", 0);
             this.receiver = intent.getParcelableExtra("transferProgressReceiver");
         }
+
+//        final NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(mContext);
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            CharSequence name = fetchString(mContext, R.string.channel_name);
+//            int importance = NotificationManager.IMPORTANCE_HIGH;
+//            NotificationChannel channel = new NotificationChannel(DOWNLOAD_CHANNEL_ID, name, importance);
+//            notificationManagerCompat.createNotificationChannel(channel);
+//        }
+
 
         // Executes a task on a thread in the thread pool
         executor.execute(new Runnable() {
@@ -148,6 +171,17 @@ public class DownloadService extends Service {
                     e.printStackTrace();
                 }
 
+//                NotificationCompat.Builder notification = new NotificationCompat.Builder(mContext, DOWNLOAD_CHANNEL_ID)
+//                        .setSmallIcon(R.drawable.ic_download)
+//                        .setContentTitle(mRemoteFileName)
+//                        .setContentText(currentProgress + " %")
+//                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+//                        .setOngoing(true)
+//                        .setOnlyAlertOnce(true)
+//                        .setProgress(progressMax, 0, false);
+//
+//                notificationManagerCompat.notify(DOWNLOAD_NOTIFICATION_ID, notification.build());
+
                 byte[] bytesArray = new byte[4096];
                 int bytesRead = -1;
 
@@ -170,6 +204,9 @@ public class DownloadService extends Service {
                         intent.putExtra("file", mRemoteFileName);
                         intent.putExtra("progress", (int) currentProgress);
                         mLocalBroadcastManager.sendBroadcast(intent);
+//                        notification.setProgress(progressMax, (int) currentProgress, false)
+//                                .setContentText(currentProgress + " %");
+//                        notificationManagerCompat.notify(DOWNLOAD_NOTIFICATION_ID, notification.build());
                     }
                 }
 
@@ -177,7 +214,10 @@ public class DownloadService extends Service {
                     success = mFTPClient.completePendingCommand();
 
                     if (success) {
-                        System.out.println(mRemoteFileName + " has been downloaded successfully.");
+//                        notification.setContentText("Download finished")
+//                                .setOngoing(false);
+//                        notificationManagerCompat.notify(DOWNLOAD_NOTIFICATION_ID, notification.build());
+                        Toast.makeText(mContext, mRemoteFileName + " has been downloaded successfully.", Toast.LENGTH_SHORT).show();
                     }
                 } catch (IOException e) {
                     e.printStackTrace();

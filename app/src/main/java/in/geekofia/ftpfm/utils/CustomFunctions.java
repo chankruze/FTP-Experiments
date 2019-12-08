@@ -148,14 +148,14 @@ public class CustomFunctions {
                 if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(context, "Downloading " + remoteFile.getName(), Toast.LENGTH_LONG).show();
 
-                    Intent intent = new Intent(context, DownloadService.class);
+                    Intent intent = new Intent(context, RemoteFileDownloadService.class);
                     intent.putExtra("mProfile", profile);
                     intent.putExtra("mRemoteFilePath", remoteFile.getAbsolutePath());
                     intent.putExtra("RemoteFileName", remoteFile.getName());
                     intent.putExtra("mLocalFilePath", "");
                     intent.putExtra("mLocalFileName", "");
                     intent.putExtra("mFileSize", remoteFile.getSizeInBytes());
-                    activity.startService(intent);
+                    activity.registerDownloadService(intent);
                 } else {
                     activity.requestStoragePermission();
                 }

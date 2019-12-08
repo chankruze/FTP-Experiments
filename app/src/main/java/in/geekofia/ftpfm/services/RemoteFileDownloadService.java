@@ -13,6 +13,7 @@ import android.os.Environment;
 import android.os.ResultReceiver;
 
 import androidx.annotation.Nullable;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import org.apache.commons.net.ftp.FTPClient;
 
@@ -39,8 +40,18 @@ public class RemoteFileDownloadService extends IntentService {
     private long mFileSize;
     private Profile profile;
 
+    private LocalBroadcastManager mLocalBroadcastManager;
+    public static final String ACTION = "in.geekofia.ftpfm.services.RemoteFileDownloadService";
+
     public RemoteFileDownloadService() {
         super(RemoteFileDownloadService.class.getName());
+    }
+
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
     }
 
     @Override
@@ -143,8 +154,10 @@ public class RemoteFileDownloadService extends IntentService {
                 }
                 downloadedFileSize += bytesRead;
                 currentProgress = Double.parseDouble((new DecimalFormat("##.##").format(100.0 * downloadedFileSize / mFileSize)));
-
-                // TODO: Update UI here
+                Intent progressIntent = new Intent(ACTION);
+                progressIntent.putExtra("file", mRemoteFileName);
+                progressIntent.putExtra("progress", (int) currentProgress);
+                mLocalBroadcastManager.sendBroadcast(progressIntent);
             }
         }
 
@@ -173,6 +186,7 @@ public class RemoteFileDownloadService extends IntentService {
         }
 
         Bundle b = new Bundle();
+        b.putInt("OPERATION", 1);
         if (receiver != null) {
             receiver.send(STATUS_FINISHED, b);
         }

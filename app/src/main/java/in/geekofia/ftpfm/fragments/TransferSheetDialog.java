@@ -27,6 +27,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import java.util.Objects;
 
 import in.geekofia.ftpfm.R;
+import in.geekofia.ftpfm.models.RemoteFile;
 import in.geekofia.ftpfm.services.DownloadService;
 import in.geekofia.ftpfm.services.RemoteFileDownloadService;
 import in.geekofia.ftpfm.utils.TransferResultReceiver;
@@ -46,7 +47,7 @@ public class TransferSheetDialog extends BottomSheetDialogFragment implements Vi
 
         initViews(view);
 
-        filter = new IntentFilter(DownloadService.ACTION);
+        filter = new IntentFilter(RemoteFileDownloadService.ACTION);
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(progressReceiver, filter);
         // Register the intent service in the activity
 //        registerService();
@@ -112,7 +113,7 @@ public class TransferSheetDialog extends BottomSheetDialogFragment implements Vi
     public void onResume() {
         super.onResume();
         // Register for the particular broadcast based on ACTION string
-        IntentFilter filter = new IntentFilter(DownloadService.ACTION);
+        IntentFilter filter = new IntentFilter(RemoteFileDownloadService.ACTION);
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(progressReceiver, filter);
         // or `registerReceiver(testReceiver, filter)` for a normal broadcast
     }

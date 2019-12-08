@@ -342,7 +342,9 @@ public class FilesActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onReceiveResult(int resultCode, Bundle resultData) {
-        listFiles(mProfile, resultData.getString("mRemoteDir"), directories, mRemoteFilesAdapter);
+        if(resultData.getInt("OPERATION", 1) == 0){
+            listFiles(mProfile, resultData.getString("mRemoteDir"), directories, mRemoteFilesAdapter);
+        }
     }
 
     @Override
