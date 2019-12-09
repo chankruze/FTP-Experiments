@@ -14,7 +14,7 @@
         android:layout_toStartOf="@id/notification_icon"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/colorTextPrimary"
         tools:text="Title Bitch !" />
 
     <TextView
@@ -27,7 +27,7 @@
         android:layout_toStartOf="@id/notification_icon"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/colorTextSecondary"
         tools:text="content" />
 
     <ImageView
@@ -37,7 +37,6 @@
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginStart="8dp"
-        android:contentDescription="@string/desc_notification_icon"
-        android:tint="@color/colorPrimary" />
+        android:contentDescription="@string/desc_notification_icon" />
 
 </RelativeLayout>
