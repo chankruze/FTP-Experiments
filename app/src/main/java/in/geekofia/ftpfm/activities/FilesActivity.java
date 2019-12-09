@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -35,16 +34,14 @@ import in.geekofia.ftpfm.adapters.RemoteFilesAdapter;
 import in.geekofia.ftpfm.fragments.TransferSheetDialog;
 import in.geekofia.ftpfm.models.Profile;
 import in.geekofia.ftpfm.models.RemoteFile;
-import in.geekofia.ftpfm.services.RemoteFileDownloadService;
 import in.geekofia.ftpfm.utils.ListFTPFiles;
 import in.geekofia.ftpfm.utils.PermissionUtil;
-import in.geekofia.ftpfm.utils.TransferResultReceiver;
 
 import static in.geekofia.ftpfm.utils.CustomFunctions.fileUpload;
 import static in.geekofia.ftpfm.utils.CustomFunctions.showFileOperations;
 import static in.geekofia.ftpfm.utils.FTPClientFunctions.ftpConnect;
 
-public class FilesActivity extends AppCompatActivity implements View.OnClickListener, TransferResultReceiver.TransferProgressReceiver {
+public class FilesActivity extends AppCompatActivity implements View.OnClickListener {
 
     ArrayList<RemoteFile> directories = new ArrayList<RemoteFile>();
     ArrayList<RemoteFile> files = new ArrayList<RemoteFile>();
@@ -180,8 +177,8 @@ public class FilesActivity extends AppCompatActivity implements View.OnClickList
         FloatingActionButton fab_upload = findViewById(R.id.fab_file_upload);
         fab_upload.setOnClickListener(this);
 
-        FloatingActionButton fab_transfer = findViewById(R.id.fab_transfer);
-        fab_transfer.setOnClickListener(this);
+//        FloatingActionButton fab_transfer = findViewById(R.id.fab_transfer);
+//        fab_transfer.setOnClickListener(this);
 
         final SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.pull_to_refresh);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -303,10 +300,10 @@ public class FilesActivity extends AppCompatActivity implements View.OnClickList
                     Toast.makeText(this, "Can't upload to root directory ;(", Toast.LENGTH_SHORT).show();
                 }
                 break;
-            case R.id.fab_transfer:
-                TransferSheetDialog transferSheetDialog = new TransferSheetDialog();
-                transferSheetDialog.show(getSupportFragmentManager(), "Transfers");
-                break;
+//            case R.id.fab_transfer:
+//                TransferSheetDialog transferSheetDialog = new TransferSheetDialog();
+//                transferSheetDialog.show(getSupportFragmentManager(), "Transfers");
+//                break;
         }
     }
 
@@ -324,35 +321,5 @@ public class FilesActivity extends AppCompatActivity implements View.OnClickList
 
     public Context getContext() {
         return mContext;
-    }
-
-    public void registerDownloadService(Intent intent) {
-        // pass the ResultReceiver via the intent to the intent service
-        TransferResultReceiver transferResultReceiver = new TransferResultReceiver(new Handler(), this);
-        intent.putExtra("transferProgressReceiver", transferResultReceiver);
-        startService(intent);
-    }
-
-    public void registerUploadService(Intent intent) {
-        // pass the ResultReceiver via the intent to the intent service
-        TransferResultReceiver transferResultReceiver = new TransferResultReceiver(new Handler(), this);
-        intent.putExtra("transferProgressReceiver", transferResultReceiver);
-        startService(intent);
-    }
-
-    @Override
-    public void onReceiveResult(int resultCode, Bundle resultData) {
-        if(resultData.getInt("OPERATION", 1) == 0){
-            listFiles(mProfile, resultData.getString("mRemoteDir"), directories, mRemoteFilesAdapter);
-        }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-//        if(transferResultReceiver != null) {
-//            transferResultReceiver.setTransferProgressReceiver(null);
-//        }
     }
 }

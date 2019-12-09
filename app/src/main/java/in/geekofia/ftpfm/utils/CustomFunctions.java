@@ -35,8 +35,7 @@ import in.geekofia.ftpfm.activities.FilesActivity;
 import in.geekofia.ftpfm.models.Profile;
 import in.geekofia.ftpfm.models.RemoteFile;
 import in.geekofia.ftpfm.services.DownloadService;
-import in.geekofia.ftpfm.services.RemoteFileDownloadService;
-import in.geekofia.ftpfm.services.RemoteFileUploadService;
+import in.geekofia.ftpfm.services.UploadService;
 
 import static in.geekofia.ftpfm.activities.FilesActivity.listFiles;
 import static in.geekofia.ftpfm.utils.FTPClientFunctions.ftpDisconnect;
@@ -131,7 +130,10 @@ public class CustomFunctions {
         newDialog.show();
     }
 
-    // FTP File Download
+    /*
+     * DOWNLOAD FUNCTION
+     *
+     **/
     private static void fileDownload(final FilesActivity activity, final RemoteFile remoteFile) {
         final Context context = activity.getContext();
         final Profile profile = activity.getProfile();
@@ -148,14 +150,14 @@ public class CustomFunctions {
                 if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(context, "Downloading " + remoteFile.getName(), Toast.LENGTH_LONG).show();
 
-                    Intent intent = new Intent(context, RemoteFileDownloadService.class);
+                    Intent intent = new Intent(context, DownloadService.class);
                     intent.putExtra("mProfile", profile);
                     intent.putExtra("mRemoteFilePath", remoteFile.getAbsolutePath());
                     intent.putExtra("RemoteFileName", remoteFile.getName());
                     intent.putExtra("mLocalFilePath", "");
                     intent.putExtra("mLocalFileName", "");
                     intent.putExtra("mFileSize", remoteFile.getSizeInBytes());
-                    activity.registerDownloadService(intent);
+                    activity.startService(intent);
                 } else {
                     activity.requestStoragePermission();
                 }
@@ -173,7 +175,10 @@ public class CustomFunctions {
         newDialog.show();
     }
 
-    // FTP File Rename
+    /*
+     * RENAME FUNCTION
+     *
+     **/
     public static void fileRename(final FilesActivity activity, final RemoteFile remoteFile) {
         final Context context = activity.getContext();
         final Profile profile = activity.getProfile();
@@ -226,6 +231,11 @@ public class CustomFunctions {
         newDialog.show();
     }
 
+
+    /*
+     * DELETE FUNCTION
+     *
+     **/
     public static void fileDelete(final FilesActivity activity, final RemoteFile remoteFile) {
         final Context context = activity.getContext();
         final Profile profile = activity.getProfile();
@@ -290,6 +300,10 @@ public class CustomFunctions {
         return currentFilePath;
     }
 
+    /*
+     * UPLOAD FUNCTION
+     *
+     **/
     public static void fileUpload(final FilesActivity activity, final String uploadDir, final DocumentFile documentFile) {
         final Context context = activity.getContext();
         final Profile profile = activity.getProfile();
@@ -306,12 +320,12 @@ public class CustomFunctions {
                 if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(context, "Uploading " + fileName, Toast.LENGTH_LONG).show();
 
-                    Intent intent = new Intent(context, RemoteFileUploadService.class);
-                    intent.putExtra("mProfile", profile);
-                    intent.putExtra("mDocumentFileUri", documentFile.getUri());
-                    intent.putExtra("mDocumentFileName", documentFile.getName());
-                    intent.putExtra("mRemoteDir", uploadDir);
-                    activity.registerUploadService(intent);
+                    Intent uploadIntent = new Intent(context, UploadService.class);
+                    uploadIntent.putExtra("mProfile", profile);
+                    uploadIntent.putExtra("mDocumentFileUri", documentFile.getUri());
+                    uploadIntent.putExtra("mDocumentFileName", documentFile.getName());
+                    uploadIntent.putExtra("mRemoteDir", uploadDir);
+                    activity.startService(uploadIntent);
                 } else {
                     activity.requestStoragePermission();
                 }

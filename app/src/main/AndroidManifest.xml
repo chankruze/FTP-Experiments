@@ -23,14 +23,10 @@
         </activity>
 
         <service
-            android:name=".services.DownloadService"
-            android:exported="false" />
+            android:name=".services.DownloadService" />
+
         <service
-            android:name=".services.RemoteFileDownloadService"
-            android:exported="false" />
-        <service
-            android:name=".services.RemoteFileUploadService"
-            android:exported="false" />
+            android:name=".services.UploadService" />
     </application>
 
 </manifest>

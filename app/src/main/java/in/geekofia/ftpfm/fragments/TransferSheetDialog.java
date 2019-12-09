@@ -11,7 +11,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,17 +23,11 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
-import java.util.Objects;
-
 import in.geekofia.ftpfm.R;
-import in.geekofia.ftpfm.models.RemoteFile;
 import in.geekofia.ftpfm.services.DownloadService;
-import in.geekofia.ftpfm.services.RemoteFileDownloadService;
-import in.geekofia.ftpfm.utils.TransferResultReceiver;
 
-public class TransferSheetDialog extends BottomSheetDialogFragment implements View.OnClickListener, TransferResultReceiver.TransferProgressReceiver {
+public class TransferSheetDialog extends BottomSheetDialogFragment implements View.OnClickListener {
 
-    private TransferResultReceiver transferResultReceiver;
     IntentFilter filter;
 
     private ProgressBar progressBar;
@@ -46,11 +39,6 @@ public class TransferSheetDialog extends BottomSheetDialogFragment implements Vi
         View view = inflater.inflate(R.layout.transfer_sheet, container, false);
 
         initViews(view);
-
-        filter = new IntentFilter(RemoteFileDownloadService.ACTION);
-        LocalBroadcastManager.getInstance(getContext()).registerReceiver(progressReceiver, filter);
-        // Register the intent service in the activity
-//        registerService();
 
         return view;
     }
@@ -66,29 +54,6 @@ public class TransferSheetDialog extends BottomSheetDialogFragment implements Vi
     @Override
     public void onClick(View v) {
         // views on click
-    }
-
-    private void registerService() {
-        Intent intent = new Intent(Objects.requireNonNull(getActivity()).getApplicationContext(), RemoteFileDownloadService.class);
-
-        // pass the ResultReceiver via the intent to the intent service
-        transferResultReceiver = new TransferResultReceiver(new Handler(), this);
-        intent.putExtra("transferProgressReceiver", transferResultReceiver);
-        getActivity().startService(intent);
-    }
-
-    @Override
-    public void onReceiveResult(int resultCode, Bundle resultData) {
-        // Handle the results from the intent service here!
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        if(transferResultReceiver != null) {
-            transferResultReceiver.setTransferProgressReceiver(null);
-        }
     }
 
     // Define the callback for what to do when message is received
@@ -113,7 +78,7 @@ public class TransferSheetDialog extends BottomSheetDialogFragment implements Vi
     public void onResume() {
         super.onResume();
         // Register for the particular broadcast based on ACTION string
-        IntentFilter filter = new IntentFilter(RemoteFileDownloadService.ACTION);
+        filter = new IntentFilter(DownloadService.DOWNLOAD_ACTION);
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(progressReceiver, filter);
         // or `registerReceiver(testReceiver, filter)` for a normal broadcast
     }

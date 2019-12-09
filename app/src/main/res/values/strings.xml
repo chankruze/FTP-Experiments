@@ -80,4 +80,6 @@
     <string name="toolbar_save">Save</string>
 
     <string name="str_developer">Developed with ❤ by chankruze</string>
+
+    <string name="desc_notification_icon">Notification Icon</string>
 </resources>
