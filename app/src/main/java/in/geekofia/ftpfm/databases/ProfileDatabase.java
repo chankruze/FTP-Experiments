@@ -48,8 +48,9 @@ public abstract class ProfileDatabase extends RoomDatabase {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            profileDao.insert(new Profile("Demo Connection", "ftp.mit.edu", 21, "", ""));
-            profileDao.insert(new Profile("Demo Connection 2", "ftp.geekofia.in", 2121, "geekofia-tester", "12345678"));
+            profileDao.insert(new Profile("Remote Demo 1", "demo.wftpserver.com", 21, "demo-user", "demo-user"));
+            profileDao.insert(new Profile("Remote Demo 2", "ftp.cs.brown.edu", 21, "", ""));
+            profileDao.insert(new Profile("Local Demo 1", "192.168.0.101", 2121, "user_name", "your_pass"));
             return null;
         }
     }

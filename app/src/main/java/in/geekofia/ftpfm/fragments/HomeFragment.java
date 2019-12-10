@@ -16,8 +16,6 @@ import in.geekofia.ftpfm.R;
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
 
-    private CardView mCardConnections;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -32,7 +30,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     private void initViews(View view) {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        mCardConnections = view.getRootView().findViewById(R.id.card_option_connections);
+        CardView mCardConnections = view.getRootView().findViewById(R.id.card_option_connections);
         mCardConnections.setOnClickListener(this);
     }
 
@@ -41,10 +39,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.card_option_connections:
                 ConnectionsFragment connectionsFragment = new ConnectionsFragment();
-                if (getActivity().getSupportFragmentManager() != null) {
-                    getActivity().getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, connectionsFragment, "CONNECTION_FRAGMENT").commit();
-                }
+                getActivity().getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, connectionsFragment, "CONNECTION_FRAGMENT").commit();
         }
     }
 }

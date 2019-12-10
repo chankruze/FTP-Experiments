@@ -20,6 +20,8 @@ import androidx.fragment.app.FragmentManager;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.Objects;
+
 import in.geekofia.ftpfm.R;
 import in.geekofia.ftpfm.models.Profile;
 
@@ -31,14 +33,10 @@ import static in.geekofia.ftpfm.activities.MainActivity.OPERATION_CODE_UPDATE;
 
 public class AddEditConnectionFragment extends Fragment {
 
-    private Toolbar mToolBar;
-    private TextInputLayout mHostLayout, mPortLayout, mUsernameLayout, mPasswordLayout;
+    private TextInputLayout mUsernameLayout, mPasswordLayout;
     private TextInputEditText mName, mHost, mPort, mUsername, mPassword;
     private RadioGroup mRadioConnectionTypeGroup;
-    private Bundle mBundle;
     private int id;
-
-    public static int OPERATION_CODE;
 
     @Nullable
     @Override
@@ -49,7 +47,7 @@ public class AddEditConnectionFragment extends Fragment {
 
         initViews(view);
 
-        mBundle = this.getArguments();
+        Bundle mBundle = this.getArguments();
         if (mBundle != null) {
             getActivity().setTitle(mBundle.getString(EXTRA_TITLE));
             Profile editProfile = ((Profile) mBundle.getSerializable(EXTRA_PROFILE));
@@ -58,14 +56,14 @@ public class AddEditConnectionFragment extends Fragment {
             mHost.setText(editProfile.getHost());
             mPort.setText(String.valueOf(editProfile.getPort()));
 
-            if (editProfile.getUser().isEmpty() && editProfile.getPass().isEmpty()){
+            if (editProfile.getUser().isEmpty() && editProfile.getPass().isEmpty()) {
                 mRadioConnectionTypeGroup.check(R.id.connection_anonymous);
             } else {
                 mUsername.setText(editProfile.getUser());
                 mPassword.setText(editProfile.getPass());
             }
         } else {
-            getActivity().setTitle("New Connection");
+            Objects.requireNonNull(getActivity()).setTitle("New Connection");
             this.id = -1;
         }
 
@@ -75,21 +73,17 @@ public class AddEditConnectionFragment extends Fragment {
     private void initViews(View view) {
 
         // Listen click on back arrow
-        mToolBar = getActivity().findViewById(R.id.toolbar);
+        Toolbar mToolBar = Objects.requireNonNull(getActivity()).findViewById(R.id.toolbar);
         mToolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ConnectionsFragment connectionsFragment = new ConnectionsFragment();
-                if (getActivity().getSupportFragmentManager() != null) {
-                    getActivity().getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, connectionsFragment, "CONNECTION_FRAGMENT").commit();
-                }
+                getActivity().getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, connectionsFragment, "CONNECTION_FRAGMENT").commit();
             }
         });
 
         // Real views
-        mHostLayout = view.getRootView().findViewById(R.id.host_layout);
-        mPortLayout = view.getRootView().findViewById(R.id.port_layout);
         mUsernameLayout = view.getRootView().findViewById(R.id.username_layout);
         mPasswordLayout = view.getRootView().findViewById(R.id.password_layout);
         mRadioConnectionTypeGroup = view.getRootView().findViewById(R.id.radio_connection_type);
@@ -129,7 +123,7 @@ public class AddEditConnectionFragment extends Fragment {
         String password = mPassword.getText().toString();
 
         if (name.trim().isEmpty())
-            name = "New Connection " + (int)(Math.random() * 999.0);
+            name = "New Connection " + (int) (Math.random() * 999.0);
 
         if (host.trim().isEmpty()) {
             Toast.makeText(getContext(), "Host address can't be empty", Toast.LENGTH_SHORT).show();
@@ -143,7 +137,8 @@ public class AddEditConnectionFragment extends Fragment {
 
         System.out.println("## Add/Edit Connections Frag ID:- " + id);
 
-        if (this.id != -1 ){
+        int OPERATION_CODE;
+        if (this.id != -1) {
             newProfile.setId(this.id);
             OPERATION_CODE = OPERATION_CODE_UPDATE;
         } else {
@@ -155,10 +150,8 @@ public class AddEditConnectionFragment extends Fragment {
         bundle.putSerializable(EXTRA_PROFILE, newProfile);
         bundle.putInt(EXTRA_OPERATION_CODE, OPERATION_CODE);
         connectionsFragment.setArguments(bundle);
-        if (getActivity().getSupportFragmentManager() != null) {
-            getActivity().getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, connectionsFragment, "CONNECTION_FRAGMENT").commit();
-        }
+        getActivity().getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, connectionsFragment, "CONNECTION_FRAGMENT").commit();
 
     }
 
@@ -170,7 +163,7 @@ public class AddEditConnectionFragment extends Fragment {
 //    }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_edit_connection, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }

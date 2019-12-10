@@ -38,10 +38,8 @@ import static in.geekofia.ftpfm.activities.MainActivity.OPERATION_CODE_UPDATE;
 
 public class ConnectionsFragment extends Fragment {
 
-    private Toolbar mToolBar;
     private RecyclerView mRecyclerView;
-    ProfileAdapter profileAdapter = new ProfileAdapter();
-    private FloatingActionButton floatingActionButton;
+    private ProfileAdapter profileAdapter = new ProfileAdapter();
     private ProfileViewModel profileViewModel;
 
     @Nullable
@@ -61,7 +59,7 @@ public class ConnectionsFragment extends Fragment {
             Profile newProfile = ((Profile) bundle.getSerializable(EXTRA_PROFILE));
             int operationCode = bundle.getInt(EXTRA_OPERATION_CODE);
 
-            if (operationCode == OPERATION_CODE_UPDATE){
+            if (operationCode == OPERATION_CODE_UPDATE) {
                 profileViewModel.update(newProfile);
             } else {
                 profileViewModel.insert(newProfile);
@@ -76,15 +74,13 @@ public class ConnectionsFragment extends Fragment {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Listen click on back arrow
-        mToolBar = getActivity().findViewById(R.id.toolbar);
+        Toolbar mToolBar = getActivity().findViewById(R.id.toolbar);
         mToolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 HomeFragment homeFragment = new HomeFragment();
-                if (getActivity().getSupportFragmentManager() != null) {
-                    getActivity().getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment, HOME_FRAGMENT).commit();
-                }
+                getActivity().getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment, HOME_FRAGMENT).commit();
             }
         });
 
@@ -96,15 +92,13 @@ public class ConnectionsFragment extends Fragment {
         mRecyclerView.setAdapter(profileAdapter);
 
         // Initialize Floating Action Button
-        floatingActionButton = view.getRootView().findViewById(R.id.floating_action_button);
+        FloatingActionButton floatingActionButton = view.getRootView().findViewById(R.id.floating_action_button);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AddEditConnectionFragment newConnectionFragment = new AddEditConnectionFragment();
-                if (getActivity().getSupportFragmentManager() != null) {
-                    getActivity().getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, newConnectionFragment, ADD_EDIT_CONNECTION_FRAGMENT).commit();
-                }
+                getActivity().getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, newConnectionFragment, ADD_EDIT_CONNECTION_FRAGMENT).commit();
             }
         });
     }
@@ -142,10 +136,8 @@ public class ConnectionsFragment extends Fragment {
                 bundle.putString(EXTRA_TITLE, "Edit " + profile.getName());
                 bundle.putSerializable(EXTRA_PROFILE, profile);
                 addEditConnectionFragment.setArguments(bundle);
-                if (getActivity().getSupportFragmentManager() != null) {
-                    getActivity().getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, addEditConnectionFragment, ADD_EDIT_CONNECTION_FRAGMENT).commit();
-                }
+                getActivity().getSupportFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, addEditConnectionFragment, ADD_EDIT_CONNECTION_FRAGMENT).commit();
             }
 
             @Override
