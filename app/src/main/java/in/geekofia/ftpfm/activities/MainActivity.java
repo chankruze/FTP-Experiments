@@ -1,9 +1,11 @@
 package in.geekofia.ftpfm.activities;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.Menu;
 
@@ -40,4 +42,21 @@ public class MainActivity extends AppCompatActivity {
 //        getMenuInflater().inflate(R.menu.menu_activity_toolbar, menu);
 //        return true;
 //    }
+
+
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setTitle("Exit Confirmation")
+                .setMessage("Do you really want to close the app ?")
+                .setPositiveButton("Yeh", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+
+                })
+                .setNegativeButton("Nope", null)
+                .show();
+    }
 }

@@ -59,6 +59,7 @@ public class FilesActivity extends AppCompatActivity implements View.OnClickList
     private TextView mErrorText;
     private ImageView mImageView;
     private Button mBtnEditConnection;
+    FloatingActionButton fab_upload;
 
     private String TAG = getClass().getSimpleName();
 
@@ -174,7 +175,7 @@ public class FilesActivity extends AppCompatActivity implements View.OnClickList
         mBtnEditConnection = findViewById(R.id.btn_edit_details);
         mBtnEditConnection.setVisibility(View.GONE);
 
-        FloatingActionButton fab_upload = findViewById(R.id.fab_file_upload);
+        fab_upload = findViewById(R.id.fab_file_upload);
         fab_upload.setOnClickListener(this);
 
 //        FloatingActionButton fab_transfer = findViewById(R.id.fab_transfer);
